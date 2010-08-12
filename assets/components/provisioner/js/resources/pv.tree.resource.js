@@ -49,7 +49,7 @@ Ext.extend(PV.tree.Resource,MODx.tree.Tree,{
 			,params: {
 				action: 'resource/import'
 				,id: id
-				,folder: !node.expanded
+				,folder: !node.ui.wasLeaf
                 ,convert: false
 			}
 			,listeners: {
@@ -65,7 +65,7 @@ Ext.extend(PV.tree.Resource,MODx.tree.Tree,{
 			,params: {
 				action: 'resource/import'
 				,id: id
-				,folder: !node.expanded
+				,folder: !node.ui.wasLeaf
                 ,convert: true
 			}
 			,listeners: {
