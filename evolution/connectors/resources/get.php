@@ -55,6 +55,19 @@ if (!empty($resource) && $resource['publishedon'] != '0000-00-00 00:00:00') {
     $resource['publishedon'] = strftime('%Y-%m-%d %H:%M:%S',strtotime($resource['publishedon']));
 } else $resource['publishedon'] = '';
 
+/* UTF8 encode character fields if we are on PHP 5.2.1 */
+if (version_compare(PHP_VERSION, '5.2.1') == 0) {
+	
+	$resource['pagetitle'] = utf8_encode($resource['pagetitle']);
+	$resource['longtitle'] = utf8_encode($resource['longtitle']);
+	$resource['description'] = utf8_encode($resource['description']);
+	$resource['alias'] = utf8_encode($resource['alias']);
+	$resource['introtext'] = utf8_encode($resource['introtext']);
+	$resource['content'] = utf8_encode($resource['content']);
+	$resource['menutitle'] = utf8_encode($resource['menutitle']);
+
+}
+
 $resource['class_key'] = 'modDocument';
 $response = errorSuccess('',$resource);
 mysql_close($db);

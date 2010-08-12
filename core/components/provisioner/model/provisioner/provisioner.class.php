@@ -1582,6 +1582,12 @@ class Provisioner {
         $result = curl_exec($this->_curlSession);
 
         /* Decode the result */
+        /* If from evolution and we are on PHP 5.2.1, manually do the UTF-8 decode */
+        if ( $this->_remoteIsEvo ) {
+            if (version_compare(PHP_VERSION, '5.2.1') == 0) {
+                $result = utf8_decode($result);
+            }
+        }
         $resourcearray = $this->modx->fromJSON($result);
 
         /* Check if we succeeded */
