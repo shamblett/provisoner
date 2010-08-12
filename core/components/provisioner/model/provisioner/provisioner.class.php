@@ -1420,7 +1420,12 @@ class Provisioner {
             }
 
         }
-
+        /* Check for newlines in TV's default text field and erase them */
+        if ( $type == 'tv' ) {
+            if ( ctype_space($elementdata['default_text']) ) {
+                $elementdata['default_text'] = "";
+            }
+        }
         $element = $this->modx->newObject($classname);
         $element->fromArray($elementdata);
         if ($element->save() == false) {
