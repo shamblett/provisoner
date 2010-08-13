@@ -1,0 +1,15 @@
+
+Changes incorporated into 1.6-beta
+----------------------------------
+
+Fixes for issues :-
+
+1 Check for CURL installation
+2 Recursive resource import
+4 TV default_text field contains newline
+
+Fix for issue 3 special characters in content field breaks imports
+done but needs testing by the original reporter(Henrik Nielson) or
+on a PHP 5.2.1 platform.
+
+ 
