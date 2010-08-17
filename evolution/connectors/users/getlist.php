@@ -74,7 +74,7 @@ foreach ( $manager_users as $manager_user ) {
     $result = mysql_query($sql, $db);
     while ($manageruser = mysql_fetch_assoc($result)) {
 
-        $manageruser['username'] = $manager_user['username'];
+        $manageruser['username'] = utf8_encode($manager_user['username']);
         $manageruser['id'] = $manager_user['id'];
         if ( $manageruser['blocked'] == 1 ) { 
 			$manageruser['true'];
@@ -94,7 +94,7 @@ foreach ( $web_users as $web_user ) {
     $result = mysql_query($sql, $db);
     while ($webuser = mysql_fetch_assoc($result)) {
 
-        $webuser['username'] = $web_user['username'];
+        $webuser['username'] = utf8_encode($web_user['username']);
         $webuser['id'] = $web_user['id'] . '_w';
         if ( $webuser['blocked'] == 1 ) { 
 			$webuser['true'];

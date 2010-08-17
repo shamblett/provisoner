@@ -33,7 +33,7 @@ $fbuffer = @file_get_contents($file);
 $time_format = '%b %d, %Y %H:%I:%S %p';
 
 $fa = array(
-    'name' => $filename,
+    'name' => utf8_encode($filename),
     'size' => filesize($file),
     'last_accessed' => strftime($time_format,fileatime($file)),
     'last_modified' => strftime($time_format,filemtime($file)),

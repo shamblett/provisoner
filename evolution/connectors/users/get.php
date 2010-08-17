@@ -27,7 +27,7 @@ if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
 if (  $scriptProperties['type'] == 'manager' ) {
 
     $sql = "SELECT * FROM "  . $table_prefix . "user_attributes " .
-           "WHERE `id` = " . "'" . $scriptProperties['id'] . "'" ;
+           "WHERE `internalKey` = " . "'" . $scriptProperties['id'] . "'" ;
 
      $result = mysql_query($sql, $db);
      if ( mysql_num_rows($result) != 1 ) {
@@ -54,7 +54,7 @@ if (  $scriptProperties['type'] == 'manager' ) {
  } else {
 
      $sql = "SELECT * FROM "  . $table_prefix . "web_user_attributes " .
-           "WHERE `id` = " . "'" . $scriptProperties['id'] . "'";
+           "WHERE `internalKey` = " . "'" . $scriptProperties['id'] . "'";
 
      $result = mysql_query($sql, $db);
      if ( mysql_num_rows($result) != 1 ) {
@@ -80,6 +80,16 @@ if (  $scriptProperties['type'] == 'manager' ) {
 
 }
 
+/* UTF8 encoding */
+$user['username'] = utf8_encode($user['name'] );
+$user['fullname'] = utf8_encode($user['fullname'] );
+$user['email'] = utf8_encode($user['email'] );
+$user['country'] = utf8_encode($user['country'] );
+$user['state'] = utf8_encode($user['state'] );
+$user['comment'] = utf8_encode($user['comment'] );
+
+
+/* Formatting */
 $user['dob'] = !empty($user['dob']) ? strftime('%m/%d/%Y',$user['dob']) : '';
 $user['blockeduntil'] = !empty($user['blockeduntil']) ? strftime('%m/%d/%Y %I:%M %p',$user['blockeduntil']) : '';
 $user['blockedafter'] = !empty($user['blockedafter']) ? strftime('%m/%d/%Y %I:%M %p',$user['blockedafter']) : '';

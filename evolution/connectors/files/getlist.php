@@ -76,8 +76,8 @@ while(false !== ($name = $odir->read())) {
 
         $cls = 'folder';
         $directories[$fileName] = array(
-            'id' => $dir.$fileName,
-            'text' => $fileName,
+            'id' => utf8_encode($dir.$fileName),
+            'text' => utf8_encode($fileName),
             'cls' => $cls,
             'type' => 'dir',
             'leaf' => false,
@@ -91,8 +91,8 @@ while(false !== ($name = $odir->read())) {
         $ext = pathinfo($filePathName,PATHINFO_EXTENSION);
         $cls = 'icon-file icon-'.$ext;
         $files[$fileName] = array(
-            'id' => $dir.$fileName,
-            'text' => $fileName,
+            'id' => utf8_encode($dir.$fileName),
+            'text' => utf8_encode($fileName),
             'cls' => $cls,
             'type' => 'file',
             'leaf' => true,

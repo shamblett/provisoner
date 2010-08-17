@@ -48,10 +48,10 @@ foreach ( $elements as $element ) {
             $sql = "SELECT * FROM " . $table_prefix ."categories WHERE `id` = " . $element['category'];
             $result = mysql_query($sql, $db);
             while ($category = mysql_fetch_assoc($result)) {
-
+				
                 $class = 'icon-category folder';
                 $nodes[] = array(
-                    'text' => strip_tags($category['category']) . ' (' . $category['id'] . ')',
+                    'text' => utf8_encode($category['category']) . ' (' . $category['id'] . ')',
                     'id' => 'n_'.$g[1].'_category_'.($category['id'] != null ? $category['id'] : 0),
                     'pk' => $category['id'],
                     'category' => $category['id'],
@@ -70,6 +70,7 @@ foreach ( $elements as $element ) {
 
             /* handle templatename case */
             $name = $type == 'template' ? $element['templatename'] : $element['name'];
+            $name = utf8_encode($name);
             $class = 'icon-'.$g[1];
             $nodes[] = array(
                 'text' => strip_tags($name) . ' (' . $element['id'] . ')',
@@ -83,7 +84,7 @@ foreach ( $elements as $element ) {
                 'type' => $g[1],
                 'elementType' => $elementType,
                 'classKey' => $elementClassKey,
-                'qtip' => strip_tags($element['description']),
+                'qtip' => utf8_encode($element['description'])
             );
    }
 

@@ -89,7 +89,7 @@ while(false !== ($name = $odir->read())) {
            
         $files[] = array(
             'id' => $filePathName,
-            'name' => $fileName,
+            'name' => utf8_encode($fileName),
             'cls' => 'icon-'.$fileExtension,
             'image' => $thumb,
             'image_width' => $thumbWidth,
@@ -97,7 +97,7 @@ while(false !== ($name = $odir->read())) {
             'url' => str_replace('//','/',$baseUrl.$url),
             'relativeUrl' => $url,
             'ext' => $fileExtension,
-            'pathname' => $filePathName,
+            'pathname' => str_replace('//','/',$filePathName),
             'lastmod' => '',
             'disabled' => false,
             'perms' => '',

@@ -19,7 +19,6 @@ $nodes = array();
 
 /* Templates */
 
-
 $nodes[] = array(
         'text' => 'Templates',
         'id' => 'n_type_template',
@@ -46,7 +45,6 @@ $nodes[] = array(
 
 /* Chunks */
 
-
 $nodes[] = array(
         'text' => 'Chunks',
         'id' => 'n_type_chunk',
@@ -60,7 +58,6 @@ $nodes[] = array(
 
 
 /* Snippets */
-
 
 $nodes[] = array(
         'text' => 'Snippets',
@@ -76,9 +73,6 @@ $nodes[] = array(
 
 /* Plugins */
 
-
-
-
 $nodes[] = array(
         'text' => 'Plugins',
         'id' => 'n_type_plugin',
@@ -92,8 +86,6 @@ $nodes[] = array(
 
 
 /* Categories */
-
-
 
 $nodes[] = array(
         'text' => 'Categories',

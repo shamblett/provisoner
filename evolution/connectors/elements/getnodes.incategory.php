@@ -38,10 +38,12 @@ $result = mysql_query($sql, $db);
 while ($element = mysql_fetch_assoc($result)) {
 
     $name = $elementIdentifier == 'template' ? $element['templatename'] : $element['name'];
+    $name = utf8_encode($name);
+    $elementIdentifier = utf8_encode($elementIdentifier);
     $class = 'icon-'.$elementIdentifier;
     
     $nodes[] = array(
-        'text' => strip_tags($name) . ' (' . $element['id'] . ')',
+        'text' => $name . ' (' . $element['id'] . ')',
         'id' => 'n_'.$elementIdentifier.'_element_'.$element['id'].'_'.$element['category'],
         'pk' => $element['id'],
         'category' => $categoryId,

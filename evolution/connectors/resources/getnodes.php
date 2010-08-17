@@ -95,13 +95,13 @@ while ($item = mysql_fetch_assoc($result)) {
     }
     $qtip = '';
     if ($item['longtitle'] != '') {
-            $qtip = '<b>'.strip_tags($item['longtitle']).'</b><br />';
+            $qtip = utf8_encode('<b>'.$item['longtitle'].'</b><br />');
     }
     if ($item['description'] != '') {
-            $qtip = '<i>'.strip_tags($item['description']).'</i>';
+            $qtip = utf8_encode('<i>'.$item['description'].'</i>');
     }
     $itemArray = array(
-            'text' => strip_tags($item['pagetitle']).' ('.$item['id'] .')',
+            'text' => utf8_encode($item['pagetitle'].' ('.$item['id'] .')'),
             'id' => 'evolution'. '_' .$item['id'],
             'pk' => $item['id'],
             'cls' => $class,

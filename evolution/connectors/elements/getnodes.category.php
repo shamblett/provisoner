@@ -32,7 +32,7 @@ while ($category = mysql_fetch_assoc($result)) {
 
     $class = 'icon-category folder';
     $nodes[] = array(
-        'text' => strip_tags($category['category']) . ' (' . $category['id'] . ')',
+        'text' => utf8_encode($category['category']) . ' (' . $category['id'] . ')',
         'id' => 'n_category_'.$category['id'],
         'pk' => $category['id'],
         'data' => $category,

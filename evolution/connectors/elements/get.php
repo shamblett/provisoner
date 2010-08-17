@@ -42,6 +42,9 @@ switch ( $type ) {
         } else {
         
             $element = mysql_fetch_assoc($result);
+            $element['name'] = utf8_encode($element['name']);
+            $element['description'] = utf8_encode($element['description']);
+            $element['snippet'] = utf8_encode($element['snippet']);
             $response = errorSuccess('',$element);
         }
 
@@ -62,6 +65,9 @@ switch ( $type ) {
         } else {
 
             $element = mysql_fetch_assoc($result);
+            $element['name'] = utf8_encode($element['name']);
+            $element['description'] = utf8_encode($element['description']);
+            $element['snippet'] = utf8_encode($element['snippet']);
             $response = errorSuccess('',$element);
         }
 
@@ -82,6 +88,9 @@ switch ( $type ) {
         } else {
 
             $element = mysql_fetch_assoc($result);
+            $element['templatename'] = utf8_encode($element['templatename']);
+            $element['description'] = utf8_encode($element['description']);
+            $element['content'] = utf8_encode($element['content']);
             $response = errorSuccess('',$element);
         }
 
@@ -102,6 +111,9 @@ switch ( $type ) {
         } else {
 
             $element = mysql_fetch_assoc($result);
+            $element['name'] = utf8_encode($element['name']);
+            $element['description'] = utf8_encode($element['description']);
+            $element['plugincode'] = utf8_encode($element['plugincode']);
             $response = errorSuccess('',$element);
         }
 
@@ -122,6 +134,11 @@ switch ( $type ) {
         } else {
 
             $element = mysql_fetch_assoc($result);
+            $element['name'] = utf8_encode($element['name']);
+            $element['description'] = utf8_encode($element['description']);
+            $element['caption'] = utf8_encode($element['caption']);
+            $element['default_text'] = utf8_encode($element['default_text']);
+            
             $response = errorSuccess('',$element);
         }
 
@@ -142,6 +159,7 @@ switch ( $type ) {
         } else {
 
             $category = mysql_fetch_assoc($result);
+            $category['category'] = utf8_encode($category['category'] );
             $category['parent'] = 0;
             $response = errorSuccess('',$category);
         }
