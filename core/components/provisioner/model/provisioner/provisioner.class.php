@@ -1035,6 +1035,7 @@ class Provisioner {
         /* Get the file */
         if ( $this->_remoteIsEvo ) {
             curl_setopt($this->_curlSession, CURLOPT_HTTPHEADER, array($this->_siteIdString));
+            $fullname = rawurlencode($fullname);
             $url = $this->_connectorURL."/assets/snippets/revogateway/connectors/index.php?action=get&entity=files&file=$fullname";
         } else {
             $url = $this->_connectorURL."/browser/file.php?action=get&file=$fullname";
