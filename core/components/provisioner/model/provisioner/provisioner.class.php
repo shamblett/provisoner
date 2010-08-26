@@ -247,13 +247,15 @@ class Provisioner {
             curl_setopt($this->_curlSession, CURLOPT_HTTPHEADER, array($this->_siteIdString));
             curl_setopt($this->_curlSession, CURLOPT_URL, $this->_connectorURL.'/security/login.php');
         }
+        $codedPassword = urlencode($password);
         curl_setopt($this->_curlSession, CURLOPT_POST, true);
         if ( $remoteSiteTypeIsEvo ) {
-            $loginstring = 'username='.$account.'&password='.$password.'&ajax=1';
+            $loginstring = 'username='.$account.'&password='.$codedPassword.'&ajax=1';
         } else {
-            $loginstring = 'username='.$account.'&password='.$password.'&login_context=mgr';
+            $loginstring = 'username='.$account.'&password='.$codedPassword.'&login_context=mgr';
         }
         curl_setopt($this->_curlSession, CURLOPT_POSTFIELDS, $loginstring);
+
 
         $result = curl_exec($this->_curlSession);
 
