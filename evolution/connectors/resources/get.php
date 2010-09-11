@@ -45,16 +45,6 @@ if ( mysql_num_rows($result) == 1 ) {
     return;
 }
 
-if (!empty($resource['pub_date']) && $resource['pub_date'] != '0000-00-00 00:00:00') {
-    $resource['pub_date'] = strftime('%Y-%m-%d %H:%M:%S',strtotime($resource['pub_date']));
-} else $resource['pub_date'] = '';
-if (!empty($resource['unpub_date']) && $resource['unpub_date'] != '0000-00-00 00:00:00') {
-    $resource['unpub_date'] = strftime('%Y-%m-%d %H:%M:%S',strtotime($resource['unpub_date']));
-} else $resource['unpub_date'] = '';
-if (!empty($resource) && $resource['publishedon'] != '0000-00-00 00:00:00') {
-    $resource['publishedon'] = strftime('%Y-%m-%d %H:%M:%S',strtotime($resource['publishedon']));
-} else $resource['publishedon'] = '';
-
 /* UTF8 encode character fields */
 	
 	$resource['pagetitle'] = utf8_encode($resource['pagetitle']);
