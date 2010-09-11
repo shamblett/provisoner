@@ -211,9 +211,9 @@ class Provisioner {
         /* Check for CURL, if not present no point going any further */
         if ( !function_exists('curl_init') ) {
 		
-			 $error = $this->modx->lexicon('nocurl');
-             return $status;
-		}
+            $error = $this->modx->lexicon('nocurl');
+            return $status;
+	}
 		
         $this->_connectorURL = $url;
 
@@ -2028,7 +2028,7 @@ class Provisioner {
      * @return true indicates the gateway is in place
      *
      */
-    function _evolutionGatewayExists(&$status) {
+    function _evolutionGatewayExists() {
 
         $url = $this->_connectorURL."/assets/snippets/revogateway/index.php";
         curl_setopt($this->_curlSession, CURLOPT_URL, $url);
