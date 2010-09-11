@@ -517,7 +517,7 @@ class Provisioner {
         if ( $folder == true) {
 
             /* Tree, id contains the context */
-            $result = $this->_getTreeResources($id, $errorstring);
+            $result = $this->_getTreeResources($id, $convert, $errorstring);
 
         } else {
 
@@ -1652,7 +1652,7 @@ class Provisioner {
      * @return boolean
      */
 
-    function _getTreeResources($id, &$errorstring ) {
+    function _getTreeResources($id, $convert, &$errorstring ) {
 
         $idmap = array();
         $ids = array();
@@ -1690,6 +1690,16 @@ class Provisioner {
             $resourcedata['hidemenu'] = 1;
             $resourcedata['context_key'] = 'provisioner';
 
+            /* Check for tag conversion */
+            if ( $convert ) {
+
+                $this->modx->loadClass('modParser095', '', false, true);
+                $translator= new modParser095($this->modx);
+                $translator->translate($resourcedata['content']);
+                $translator->translate($resourcedata['pagetitle']);
+                $translator->translate($resourcedata['longtitle']);
+            }
+            
             /* Create the resource locally */
             $localresource = $this->modx->newObject($resourcedata['class_key']);
             $localresource->fromArray($resourcedata);
