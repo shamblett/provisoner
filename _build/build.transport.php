@@ -123,7 +123,10 @@ $vehicle->resolve('file', array(
 $vehicle->resolve('file', array(
     'source' => $sources['source_core'],
     'target' => "return MODX_CORE_PATH . 'components/';"));
-	
+$vehicle->resolve('php',array(
+            'type' => 'php',
+            'source' => $sources['resolvers'] . 'resolver.php'));
+
 /* Pack the vehicles*/
 foreach ( $vehicles as $vehicle ) {
 
