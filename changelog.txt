@@ -1,4 +1,10 @@
 
+
+Changes incorporated into 1.7-beta
+----------------------------------
+
+Fixes for issues 8, 11, 12, 13, 14, 15, 17, 19
+
 Changes incorporated into 1.6-beta
 ----------------------------------
 
