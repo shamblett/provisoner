@@ -99,10 +99,16 @@ class Provisioner {
     private $_usergroup;
 
     /**
-     * @var importpath the path to import files too
+     * @var importpath the path to import files
      * @access private
      */
     private $_importpath;
+    
+    /**
+     * @var tmppath the path to the tmp directory
+     * @access private
+     */
+    private $_tmppath;
 
     /**
      * @var remoteIsEvo indicator, true if evolution
@@ -186,6 +192,9 @@ class Provisioner {
         /* Get our user path for file imports */
         $this->_importpath = $this->modx->getOption('assets_path').'components/provisioner/imports/';
 
+        /* Get our tmp path for CURL usage */
+        $this->_tmppath = $this->modx->getOption('assets_path').'components/provisioner/tmp/';
+
         /* Create the remote header site identity string for Revolution installations */
         $this->_siteIdString = Provisioner::AUTHHEADER . $this->_siteId;
     }
@@ -220,7 +229,7 @@ class Provisioner {
         /* CURL initialisation */
 
         /* Create a temp file for session cookies */
-        $this->_cookiefile = tempnam("", "CURL");
+        $this->_cookiefile = tempnam($this->_tmppath, "CURL");
 
         /* Initialise CURL and set the return transfer and cookie options */
         $this->_curlSession = curl_init();
