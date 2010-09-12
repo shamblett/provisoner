@@ -69,6 +69,12 @@ class Provisioner {
     private $_loggedin;
 
     /**
+     * @var loggedin logged in user
+     * @access private
+     */
+    private $_loggedinUser;
+
+    /**
      * @var siteid remote site identifier
      * @access private
      */
@@ -224,6 +230,13 @@ class Provisioner {
             return $status;
 	}
 		
+         /* Check for logged in user same as this one */
+        if ( $this->_checkLoggedIn() ) {
+
+            $error = $this->modx->lexicon('wronguser');
+            return $status;
+	}
+
         $this->_connectorURL = $url;
 
         /* CURL initialisation */
@@ -268,7 +281,9 @@ class Provisioner {
 
         $result = curl_exec($this->_curlSession);
 
+
         /* Check the response body for success/fail */
+        $user = $this->modx->getLoginUserName();
         if ( $remoteSiteTypeIsEvo ) {
 
             if ( strstr($result, 'Location') === FALSE ) {
@@ -279,7 +294,7 @@ class Provisioner {
 
                 $status = true;
                 $this->_setSessionParams($this->_cookiefile,
-                        $this->_connectorURL, $account, true, $siteId );
+                        $this->_connectorURL, $account, true, $siteId, $user );
             }
 
         } else {
@@ -294,7 +309,7 @@ class Provisioner {
                     /* Worked, log ourselves in */
                     $status = true;
                     $this->_setSessionParams($this->_cookiefile,
-                            $this->_connectorURL, $account, false, $siteId );
+                            $this->_connectorURL, $account, false, $siteId, $user );
 
                 } else {
 
@@ -310,7 +325,7 @@ class Provisioner {
                     /* Worked, log ourselves in */
                     $status = true;
                     $this->_setSessionParams($this->_cookiefile,
-                            $this->_connectorURL, $account, false, $siteId );
+                            $this->_connectorURL, $account, false, $siteId, $user );
 
                 } else {
 
@@ -345,12 +360,12 @@ class Provisioner {
         $status = false;
 
         /* Logged in check */
-        if ( !$this->_loggedin ) {
+        if ( $this->_checkLoggedIn() ) {
 
-            $error = $this->modx->lexicon('notloggedin');
+            $error = $this->modx->lexicon('wronguser');
             return false;
         }
-
+        
         /* Log ourselves out */
         if ( $remoteSiteTypeIsEvo ) {
             curl_setopt($this->_curlSession, CURLOPT_URL, $this->_connectorURL.'/manager/index.php?a=8');
@@ -429,7 +444,7 @@ class Provisioner {
 
 
         /* Logged in check */
-        if ( !$this->_loggedin ) {
+        if ( $this->_checkLoggedIn() ) {
 
             $errorstring = $this->modx->lexicon('notloggedin');
             return false;
@@ -581,7 +596,7 @@ class Provisioner {
 
 
         /* Logged in check */
-        if ( !$this->_loggedin ) {
+        if ( $this->_checkLoggedIn() ) {
 
             $errorstring = $this->modx->lexicon('notloggedin');
             return false;
@@ -641,7 +656,7 @@ class Provisioner {
     function getUsers($start, $limit, $username, &$errorstring, &$nodes) {
 
         /* Logged in check */
-        if ( !$this->_loggedin ) {
+        if ( $this->_checkLoggedIn() ) {
 
             $errorstring = $this->modx->lexicon('notloggedin');
             return false;
@@ -712,8 +727,8 @@ class Provisioner {
         $localsignatures = array();
         $localpackages = array();
 
-        /* Logged in check */
-        if ( !$this->_loggedin ) {
+       /* Logged in check */
+        if ( $this->_checkLoggedIn() ) {
 
             $errorstring = $this->modx->lexicon('notloggedin');
             return false;
@@ -795,7 +810,7 @@ class Provisioner {
 
 
         /* Logged in check */
-        if ( !$this->_loggedin ) {
+        if ( $this->_checkLoggedIn() ) {
 
             $errorstring = $this->modx->lexicon('notloggedin');
             return false;
@@ -1898,12 +1913,19 @@ class Provisioner {
 
                 $this->_account = $account->get('value');
 
-                /* Site Identifier*/
+                /* Site Identifier */
                 $siteId = $this->modx->getObject('modSystemSetting',
                         array ('key' => 'siteid',
                         'namespace' => 'provisioner'));
 
                 $this->_siteId = $siteId->get('value');
+
+                /* Logged in User */
+                $user = $this->modx->getObject('modSystemSetting',
+                        array ('key' => 'user',
+                        'namespace' => 'provisioner'));
+
+                $this->_loggedinUser = $user->get('value');
 
                 /* Create the CURL object */
                 $this->_curlSession = curl_init();
@@ -1929,9 +1951,10 @@ class Provisioner {
      * @param $account logged in account
      * @param $evolution true if we are an Evolution site
      * @param $siteId Remote site identifier for Revolution
+     * @param $user Logged in user
      *
      */
-    function _setSessionParams($cookiefile, $url, $account, $evolution, $siteId) {
+    function _setSessionParams($cookiefile, $url, $account, $evolution, $siteId, $user) {
 
         /* Status */
         $loginsetting = $this->modx->getObject('modSystemSetting',
@@ -1986,6 +2009,14 @@ class Provisioner {
             $siteidsetting->set('value', $siteId);
             $siteidsetting->save();
         }
+
+        /* User */
+        $usersetting = $this->modx->getObject('modSystemSetting',
+                array ('key' => 'user',
+                'namespace' => 'provisioner'));
+
+        $usersetting->set('value', $user);
+        $usersetting->save();
 
         $this->_loggedin = true;
 
@@ -2065,5 +2096,22 @@ class Provisioner {
 
    }
 
+   /**
+     * Check that no other user is already logged in
+     *
+     * @access private
+     * @return true another user is already logged in
+     *
+     */
+   function _checkLoggedIn() {
+
+       $user = $this->modx->getLoginUserName();
+       if ( $this->_loggedin) {
+
+           if ( $user != $this->_loggedinUser ) return true;
+       }
+
+       return false;
+   }
 
 }

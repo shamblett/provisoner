@@ -30,6 +30,7 @@ $_lang['loginsuccess'] = 'Login to the Remote Site successful';
 $_lang['loginfailed'] = 'Login to the Remote Site failed';
 $_lang['logoutsuccess'] = 'Logout of the Remote Site successful';
 $_lang['logoutfailed'] = 'Logout of the Remote Site failed';
+$_lang['wronguser'] = 'A user is already logged in';
 $_lang['radio_login'] = 'Login';
 $_lang['radio_logout'] = 'Logout';
 $_lang['notloggedin'] = 'Not logged in';

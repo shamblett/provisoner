@@ -93,6 +93,17 @@ $datasetting->fromArray(array(
 $settings[] = $datasetting;	
 unset($datasetting);
 
+$datasetting = $modx->newObject('modSystemSetting');
+$datasetting->fromArray(array(
+				'key' => 'user',
+				'value' => "",
+				'xtype' => 'textfield',
+				'namespace' => 'provisioner',
+				'area' => 'Provisioner'
+				), '', true, true);
+$settings[] = $datasetting;
+unset($datasetting);
+
 /* User group */
 
 $usergroup = $modx->newObject('modUserGroup');
