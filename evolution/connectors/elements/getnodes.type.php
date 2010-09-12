@@ -91,4 +91,4 @@ foreach ( $elements as $element ) {
 }
 
 mysql_close($db);
-echo json_encode($nodes);
+echo toJSON($nodes);

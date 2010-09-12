@@ -126,5 +126,5 @@ while ($item = mysql_fetch_assoc($result)) {
 }
 
     mysql_close($db);
-    echo json_encode($items);
+    echo toJSON($items);
 

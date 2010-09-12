@@ -15,8 +15,6 @@
 /* Protection */
 if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
-include "common/support.php";
-
 /* format filename */
 $file= rawurldecode($scriptProperties['file']);
 
@@ -41,4 +39,4 @@ $fa = array(
 );
 
 $response = errorSuccess('', $fa);
-echo json_encode($response);
+echo toJSON($response);

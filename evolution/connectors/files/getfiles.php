@@ -15,8 +15,6 @@
 /* Protection */
 if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
-include "common/support.php";
-
 /* Get sanitized base path and current path */
 $db = mysql_connect($database_server, $database_user, $database_password);
 if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");

@@ -14,6 +14,8 @@
 
 /* General support functions for the Revolution gateway processor */
 
+include_once 'encode.php';
+
 function errorFailure($message = '', $object = null) {
 
     return processResponse($message, false, $object);
@@ -40,7 +42,7 @@ function processResponse($message = '', $status = false, $object = null) {
 function outputArray($output) {
 	
 	$count = count($output);
-	$response = '({"total":"'.$count.'","results":'.json_encode($output).'})';
+	$response = '({"total":"'.$count.'","results":'.toJSON($output).'})';
 	return $response;
 }
 

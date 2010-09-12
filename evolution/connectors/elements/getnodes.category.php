@@ -46,4 +46,4 @@ while ($category = mysql_fetch_assoc($result)) {
 }
 
 mysql_close($db);
-echo json_encode($nodes);
+echo toJSON($nodes);

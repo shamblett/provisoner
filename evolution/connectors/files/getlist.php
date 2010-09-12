@@ -115,4 +115,4 @@ foreach ($files as $file) {
 
 
 mysql_close($db);
-echo json_encode($ls);
+echo toJSON($ls);

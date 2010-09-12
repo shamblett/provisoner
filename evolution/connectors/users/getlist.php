@@ -108,5 +108,5 @@ foreach ( $web_users as $web_user ) {
 
 mysql_close($db);
 $count = count($users);
-$response = '({"total":"'.$count.'","results":'.json_encode($users).'})';
+$response = '({"total":"'.$count.'","results":'. toJSON($users).'})';
 echo $response;

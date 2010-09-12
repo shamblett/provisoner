@@ -14,8 +14,6 @@
 /* Protection */
 if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
-include "common/support.php";
-
 $type = $scriptProperties['type'];
 $id = $scriptProperties['id'];
 
@@ -49,7 +47,7 @@ switch ( $type ) {
         }
 
         mysql_close($db);
-        echo json_encode($response);
+        echo toJSON($response);
         break;
 
     case 'chunk' :
@@ -72,7 +70,7 @@ switch ( $type ) {
         }
 
         mysql_close($db);
-        echo json_encode($response);
+        echo toJSON($response);
         break;
 
     case 'template' :
@@ -95,7 +93,7 @@ switch ( $type ) {
         }
 
         mysql_close($db);
-        echo json_encode($response);
+        echo toJSON($response);
         break;
 
     case 'plugin' :
@@ -118,7 +116,7 @@ switch ( $type ) {
         }
 
         mysql_close($db);
-        echo json_encode($response);
+        echo toJSON($response);
         break;
 
    case 'tv' :
@@ -143,7 +141,7 @@ switch ( $type ) {
         }
 
         mysql_close($db);
-        echo json_encode($response);
+        echo toJSON($response);
         break;
 
   case 'category' :
@@ -165,7 +163,7 @@ switch ( $type ) {
         }
 
         mysql_close($db);
-        echo json_encode($response);
+        echo toJSON($response);
         break;
 
   default :
@@ -173,6 +171,6 @@ switch ( $type ) {
         $response = errorFailure("No such element type",
                         array('type' => $type));
         mysql_close($db);
-        echo json_encode($response);
+        echo toJSON($response);
         
 }

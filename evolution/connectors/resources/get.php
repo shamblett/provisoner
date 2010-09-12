@@ -16,8 +16,6 @@
 /* Protection */
 if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
-include "common/support.php";
-
 /* Get the resource from the database */
 $db = mysql_connect($database_server, $database_user, $database_password);
 if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
@@ -60,4 +58,4 @@ if ( mysql_num_rows($result) == 1 ) {
 $resource['class_key'] = 'modDocument';
 $response = errorSuccess('',$resource);
 mysql_close($db);
-echo json_encode($response);
+echo toJSON($response);

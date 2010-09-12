@@ -98,4 +98,4 @@ $nodes[] = array(
         'draggable' => false,
 );
 
-echo json_encode($nodes);
+echo toJSON($nodes);

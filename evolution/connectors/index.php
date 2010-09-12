@@ -15,6 +15,7 @@
 define('IN_REVO_GATEWAY_CONNECTOR', "true");
 
 require_once 'common/security.php';
+require_once 'common/support.php';
 
 $scriptProperties = array();
 

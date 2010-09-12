@@ -14,8 +14,6 @@
 /* Protection */
 if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
-include "common/support.php";
-
 $db = mysql_connect($database_server, $database_user, $database_password);
 if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
 
@@ -96,6 +94,6 @@ $user['blockedafter'] = !empty($user['blockedafter']) ? strftime('%m/%d/%Y %I:%M
 $user['lastlogin'] = !empty($user['lastlogin']) ? strftime('%m/%d/%Y',$user['lastlogin']) : '';
 
 mysql_close($db);
-echo json_encode($response);
+echo toJSON($response);
 
 
