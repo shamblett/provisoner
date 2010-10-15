@@ -20,21 +20,12 @@ PV.panel.Files = function(config) {
             ,cls: 'modx-page-header'
             ,id: 'pv-files-header'
         },{            
-            xtype: 'portal'
-            ,items: [{
-                columnWidth: .47
-                ,items: [{
-                    title: _('pv_files')
-                    ,layout: 'form'
-                     ,collapsible: false
-                    ,items: [{
-                        html: '<p>'+_('files_desc')+'</p>'
-                        ,border: false
-                    },{
-                        xtype: 'pv-tree-file'
-                    }]
-                }]
-        	}]
+            html: '<p>'+_('files_desc')+'</p>'
+            ,border: false
+
+        },{
+            xtype: 'pv-tree-file'
+            
 		}]
     });
     PV.panel.Files.superclass.constructor.call(this,config);

@@ -1075,8 +1075,9 @@ class Provisioner {
 
         /* Get the contents and create the file */
         $filerecord = $resultarray['object'];
-        $filecontents = $filerecord['content'];
-         $errorstring = $this->_fileCreateCheck($filecontents);
+        /* Decode from base64 if from evolution */
+        if ( $this->_remoteIsEvo ) $filecontents = base64_decode($filerecord['content']);
+        $errorstring = $this->_fileCreateCheck($filecontents);
         if ( $errorstring != '' ) return false;
         $createfile = $this->_importpath.$filename;
         if (file_put_contents($createfile, $filecontents) == false ) {
@@ -1444,6 +1445,12 @@ class Provisioner {
             }
             if ( $type == 'template') {
                 $translator->translate($elementdata['content']);
+            }
+
+            if ( $type == 'tv') {
+                $translator->translate($$elementdata['default_text']);
+                $translator->translate($$elementdata['display']);
+                $translator->translate($$elementdata['display_params']);
             }
 
         }
@@ -2114,4 +2121,928 @@ class Provisioner {
        return false;
    }
 
+   /**
+     * Evolution site import
+     *
+     * @access public
+     * @param $importArray elements to import
+     * @param $context the context to import into
+     * @param $parent Re-parent imported categories to Provisioner
+     * @param $smartmode be smart!
+     * @param $stoponerror stop if we encounter an error
+     * @param $errorstring reported error string
+     *
+     */
+   function importEvoSite($importArray, $context, $parent, $abort, &$errorstring) {
+
+        $result = false;
+
+        /* 'Have' flags */
+        $getCategories = false;
+        $haveResources = false;
+        $haveTemplates = false;
+        $haveTvs = false;
+        $haveSnippets = false;
+        $haveChunks = false;
+        $havePlugins = false;
+        $haveCategories = false;
+        $haveKeywords = false;
+        $haveMetatags = false;
+        $haveDocgroups = false;
+        $haveTvAccess = false;
+        $haveTvContent = false;
+        $haveTvTemplate = false;
+        $havePluginEvent = false;
+
+        /* Map arrays, these hold old -> new id mappings, indexed by old */
+        $categoryMap = array();
+        $templateMap = array();
+        $resourceMap = array();
+        $docgroupMap = array();
+        $tvMap = array();
+        $pluginMap = array();
+
+        /* Logged in check */
+        if ( !$this->_loggedin ) {
+
+            $errorstring = $this->modx->lexicon('notloggedin');
+            return false;
+        }
+        
+        /* Evolution site check */
+        if ( !$this->_remoteIsEvo ) {
+
+            $errorstring = $this->modx->lexicon('notevosite');
+            return false;
+        }
+
+        /* Abort check */
+        if ( $abort ) {
+            $errorstring = $this->modx->lexicon('evoimportaborted');
+
+            /* Return a successful abort! */
+            return true;
+        }
+
+        /* Set the base include flags */
+        $smartmode = true;
+        $deletebefore = true;
+        
+        /* Load a tag translator */
+        $this->modx->loadClass('modParser095', '', false, true);
+        $translator= new modParser095($this->modx);
+
+        /*
+         * Importation of requested elements starts here
+        */
+
+        /* Get all resources if asked for */
+        if ( $importArray['resources'] ) {
+
+            $result = $this->_getAllEvoResources($evoResources, $evoKeywords,
+                                                 $evoMetatags, $evoDocgroups,
+                                                 $smartmode, $errorstring);
+            if ( !$result ) return false;
+
+            /* Set the 'have' flags */
+            if ( count($evoResources) != 0 ) $haveResources = true;
+            if ( count($evoKeywords) != 0 ) $haveKeywords = true;
+            if ( count($evoMetatags) != 0 ) $haveMetatags = true;
+            if ( count($evoDocgroups) != 0 ) $haveDocgroups = true;
+        }
+
+        /* Get all templates if asked for */
+        if ( $importArray['templates'] ) {
+
+            $result = $this->_getAllEvoElements($evoTemplates, "template", $errorstring);
+            if ( !$result ) return false;
+
+            /* Set the 'have' flag */
+            if ( count($evoTemplates) != 0 ) $haveTemplates = true;
+
+            /* if we have this element we need categories */
+            $getCategories = true;
+        }
+
+        /* Get all tv's if asked for */
+        if ( $importArray['tvs'] ) {
+
+            $result = $this->_getAllEvoElements($evoTvs, "tv", $errorstring);
+            if ( !$result ) return false;
+            
+            /* Set the 'have' flag */
+            if ( count($evoTvs) != 0 ) $haveTvs = true;
+            
+            /* If smart mode is on get the associated data */
+            if ( $smartmode ) {
+
+                $result = $this->_getAllEvoTVData($evoTvAccess, $evoTvTemplate,
+                                                  $evoTvContent, $errorstring);
+
+                if ( count($evoTvAccess) != 0 ) $haveTvAccess = true;
+                if ( count($evoTvTemplate) != 0 ) $haveTvTemplate = true;
+                if ( count($evoTvContent) != 0 ) $haveTvContent = true;
+
+            }
+
+            /* if we have this element we need categories */
+            $getCategories = true;
+        }
+
+        /* Get all snippets if asked for */
+        if ( $importArray['snippets'] ) {
+
+            $result = $this->_getAllEvoElements($evoSnippets, "snippet", $errorstring);
+            if ( !$result ) return false;
+
+             /* Set the 'have' flag */
+            if ( count($evoSnippets) != 0 ) $haveSnippets = true;
+
+            /* if we have this element we need categories */
+            $getCategories = true;
+        }
+
+        /* Get all chunks if asked for */
+        if ( $importArray['chunks'] ) {
+
+            $result = $this->_getAllEvoElements($evoChunks, "chunk", $errorstring);
+            if ( !$result ) return false;
+
+             /* Set the 'have' flag */
+            if ( count($evoChunks) != 0 ) $haveChunks = true;
+
+            /* if we have this element we need categories */
+            $getCategories = true;
+        }
+
+        /* Get all plugins if asked for */
+        if ( $importArray['plugins'] ) {
+
+            $result = $this->_getAllEvoElements($evoPlugins, "plugin", $errorstring);
+            if ( !$result ) return false;
+
+             /* Set the 'have' flag */
+            if ( count($evoPlugins) != 0 ) $havePlugins = true;
+
+            /* If smart mode is on get the associated data */
+            if ( $smartmode ) {
+
+                $result = $this->_getAllEvoPluginEvents($evoPluginEvent, $evoPluginEventMap,
+                                                        $errorstring);
+                
+                if ( count($evoPluginEventMap) != 0 ) $havePluginEvent = true;
+
+            }
+
+            /* if we have this element we need categories */
+            $getCategories = true;
+        }
+
+        /*
+         * Creation processing starts here
+        */
+
+        /* Get all categories if we need them */
+        if ( $getCategories ) {
+
+            $result = $this->_getAllEvoElements($evoCategories, "category", $errorstring);
+            if ( !$result ) return false;
+            if ( count($evoCategories) != 0 ) $haveCategories = true;
+        }
+
+        /* Ok, now process the results */
+
+        /* Firstly if we have categories we need them, so create them */
+        if ( $haveCategories ) {
+
+            /* Delete existing if requested */
+            if ( $deletebefore ) {
+                
+                $result = $this->_deleteElements('modCategory', $errorstring);
+                if ( !$result ) return false;              
+            }
+
+            /* Create */
+            foreach ($evoCategories as $category ) {
+
+                /* Re parent if requested */
+                if ( $parent ) $category['parent'] = $this->_category;
+
+                /* Create them */
+                $categoryObject = $this->modx->newObject('modCategory');
+                $categoryObject->fromArray($category);
+                if ($categoryObject->save() == false) {
+
+                        $errorstring = $this->modx->lexicon('evoimportcatfail');
+                        $errorstring .= $category['category'];
+                        return false;
+                }
+
+                /* Update the map */
+                $categoryMap[$category['id']] = $categoryObject->get('id');
+            }
+        }
+
+        /* Next, get the templates if needed and assign them the new categories */
+        if ( $haveTemplates ) {
+
+            /* Delete existing if requested */
+            if ( $deletebefore ) {
+
+                $result = $this->_deleteElements('modTemplate', $errorstring);
+                if ( !$result ) return false;
+            }
+
+            foreach ($evoTemplates as $template ) {
+
+                 $template['category'] = $categoryMap[$template['category']];
+
+                 /* Tag convert */
+                 $translator->translate($template['content']);
+
+                 /* Create them */
+                 $templateObject = $this->modx->newObject('modTemplate');
+                 $templateObject->fromArray($template);
+                 if ($templateObject->save() == false) {
+
+                        $errorstring = $this->modx->lexicon('evoimporttemplatefail');
+                        $errorstring .= $template['templatename'];
+                        return false;
+                }
+
+                /* Update the map */
+                $templateMap[$template['id']] = $templateObject->get('id');
+
+             }
+
+        }
+
+        /* Next, get the resources if needed and assign them the new templates
+         * if we have them, then re-parent the resources into the local tree.
+         * Then check for smart mode, if 'on' we need to process keywords and the
+         * document xref, metatags and document groups and their xref's.
+         */
+        if ( $haveResources ) {
+
+            /* Delete existing if requested */
+            if ( $deletebefore ) {
+
+                $result = $this->_deleteElements('modResource', $errorstring);
+                if ( !$result ) return false;
+            }
+
+            foreach ($evoResources as $resource ) {
+
+                /* Map to the new templates if we have them */
+                if ( $haveTemplates ) $resource['template'] = $templateMap[$resource['template']];
+
+                /* Set the context key */
+                $resource['context_key'] = $context;
+                
+                /* Tag convert */
+                $translator->translate($resource['content']);
+                $translator->translate($resource['pagetitle']);
+                $translator->translate($resource['longtitle']);
+
+                /* Create them */
+                 $resourceObject = $this->modx->newObject('modResource');
+                 $resourceObject->fromArray($resource);
+                 if ($resourceObject->save() == false) {
+
+                        $errorstring = $this->modx->lexicon('evoimportresourcefail');
+                        $errorstring .= $resource['pagetitle'];
+                        return false;
+                }
+
+                /* Update the map */
+                $resourceMap[$resource['id']] = $resourceObject->get('id');
+
+            }
+
+            /* Re-parent the resources locally */
+            $resourceCollection = $this->modx->getCollection('modResource');
+            foreach ( $resourceCollection as $newResource ) {
+
+                $oldparent = $newResource->get('parent');
+                $newparent = $resourceMap[$oldparent];
+                $newResource->set('parent', $newparent);
+                $newResource->save();
+            }
+
+            /* Check for smart mode */
+            if ( $smartmode ) {
+
+                /* Keywords */
+                if ( $haveKeywords ) {
+
+                    /* Delete existing if requested */
+                    if ( $deletebefore ) {
+
+                        $result = $this->_deleteElements('modKeyword', $errorstring);
+                        if ( !$result ) return false;
+                    }
+                    
+                    foreach ( $evoKeywords as $name => $resourcelist ) {
+
+                        /* Create */
+                        $keywordObject = $this->modx->newObject('modKeyword',
+                                                                array('keyword' => $name));
+
+                        /* Add the resources */
+                        foreach ( $resourcelist as $xref ) {
+
+                            if ( $xref == null ) continue;
+                            /* Map the old resource id and get the new resource */
+                            $newResourceId = $resourceMap[$xref];
+                            if ( $newResourceId == null ) continue;                          
+                            $newResourceObject = $this->modx->getObject('modResource',
+                                                                        array('id' => $newResourceId));
+                            if ( $newResourceObject == null ) continue;                                            
+                            $keywordObject->addMany($newResourceObject);
+                        }
+
+                        /* Save it */
+                        $keywordObject->save();
+                    }
+                    
+                } // Have keywords
+
+                /* Metatags */
+                if ( $haveMetatags ) {
+
+                    /* Delete existing if requested */
+                    if ( $deletebefore ) {
+
+                        $result = $this->_deleteElements('modMetatag', $errorstring);
+                        if ( !$result ) return false;
+                    }
+
+                    foreach ( $evoMetatags as $metatag ) {
+
+                        /* Create */
+                        $metatagObject = $this->modx->newObject('modMetatag', $metatag);
+                        if ( $metatagObject == null ) continue;
+                        $metatagObject->save();
+
+                    }
+
+                } // Have metatags
+
+                /* Document groups */
+                if ( $haveDocgroups ) {
+
+                    /* Delete existing if requested */
+                    if ( $deletebefore ) {
+
+                        $result = $this->_deleteElements('modResourceGroup', $errorstring);
+                        if ( !$result ) return false;
+                        $result = $this->_deleteElements('modResourceGroupResource', $errorstring);
+                        if ( !$result ) return false;
+                    }
+
+                    /* Create the new ones */
+                    foreach ( $evoDocgroups[0] as $name ) {
+
+                        /* Create */
+     
+                        /* Existence check */
+                        $alreadyExists = $this->modx->getObject('modResourceGroup',array('name' => $name['name']));
+                        if ( !$alreadyExists) {
+                            $docgroupObject = $this->modx->newObject('modResourceGroup',$name);
+                            $docgroupObject->save();
+
+                            /* Update the map */
+                            $docgroupMap[$name['id']] = $docgroupObject->get('id');
+
+                            /* Add the resources */
+                            foreach ( $evoDocgroups[1][$name['name']] as $xref ) {
+
+                                if ( $xref == null ) continue;
+                                /* Map the old resource id and get the new resource */
+                                $newResourceId = $resourceMap[$xref];
+                                if ( $newResourceId == null ) continue;
+                                $resourceGroupResource = $this->modx->newObject('modResourceGroupResource');
+                                $resourceGroupResource->set('document',$newResourceId);
+                                $resourceGroupResource->set('document_group',$docgroupObject->get('id'));
+                                $resourceGroupResource->save();
+                            }
+                        }
+                    }
+
+                } // Have document groups
+             
+            } // Smart mode
+
+       } // Have resources
+
+       /* Next, get the TV's if needed and assign them the new categories */
+        if ( $haveTvs ) {
+
+            /* Delete existing if requested */
+            if ( $deletebefore ) {
+
+                $result = $this->_deleteElements('modTemplateVar', $errorstring);
+                if ( !$result ) return false;
+            }
+
+            foreach ($evoTvs as $tv ) {
+
+                 $tv['category'] = $categoryMap[$tv['category']];
+
+                 /* Tag convert */
+                 $translator->translate($tv['default_text']);
+                 $translator->translate($tv['display']);
+                 $translator->translate($tv['display_params']);
+
+                 /* Create them */
+                 $tvObject = $this->modx->newObject('modTemplateVar');
+                 $tvObject->fromArray($tv);
+                 if ($tvObject->save() == false) {
+
+                        $errorstring = $this->modx->lexicon('evoimporttvfail');
+                        $errorstring .= $tv['name'];
+                        return false;
+                }
+
+                /* Update the map */
+                $tvMap[$tv['id']] = $tvObject->get('id');
+
+             }
+
+        } // Have TV's
+
+        /* If smart mode is on create the associated data */
+        if ( $smartmode ) {
+
+            /* Tv template mapping */
+            if ( $haveTvTemplate ) {
+
+                /* Delete existing if requested */
+                if ( $deletebefore ) {
+
+                    $result = $this->_deleteElements('modTemplateVarTemplate', $errorstring);
+                    if ( !$result ) return false;
+                }
+
+                /* Create */
+                foreach ( $evoTvTemplate as $tvTemplate ) {
+
+                    $tvTemplateObject = $this->modx->newObject('modTemplateVarTemplate');
+                    /* Re-map the template and the TV id */
+                    $tvTemplate['templateid'] = $templateMap[$tvTemplate['templateid']];
+                    if ( $tvTemplate['templateid'] == null ) continue;
+                    $tvTemplate['tmplvarid'] = $tvMap[$tvTemplate['tmplvarid']];
+                    if ( $tvTemplate['tmplvarid'] == null ) continue;
+                    $tvTemplateObject->fromArray($tvTemplate, '' , true);
+                    if ($tvTemplateObject->save() == false) {
+
+                        $errorstring = $this->modx->lexicon('evoimporttvtemplatefail');
+                        $errorstring .= $tvTemplate['tmplvarid'];
+                        return false;
+                    }
+
+                }
+
+            } // Have TV templates
+
+            /* Tv resource mapping */
+            if ( $haveTvContent ) {
+
+                /* Delete existing if requested */
+                if ( $deletebefore ) {
+
+                    $result = $this->_deleteElements('modTemplateVarResource', $errorstring);
+                    if ( !$result ) return false;
+                }
+
+                /* Create */
+                foreach ( $evoTvContent as $tvContent ) {
+
+                    $tvContentObject = $this->modx->newObject('modTemplateVarResource');
+                    /* Re-map the resource and the TV id */
+                    $tvContent['contentid'] = $resourceMap[$tvContent['contentid']];
+                    if ( $tvContent['contentid'] == null ) continue;
+                    $tvContent['tmplvarid'] = $tvMap[$tvContent['tmplvarid']];
+                    if ( $tvContent['tmplvarid'] == null ) continue;
+                    $tvContentObject->fromArray($tvContent, '' , true);
+                    if ($tvContentObject->save() == false) {
+
+                        $errorstring = $this->modx->lexicon('evoimporttvcontentfail');
+                        $errorstring .= $tvContent['tmplvarid'];
+                        return false;
+                    }
+
+                }
+
+            } // TV resource
+
+            /* Tv resource group mapping */
+            if ( $haveTvAccess ) {
+
+                /* Delete existing if requested */
+                if ( $deletebefore ) {
+
+                    $result = $this->_deleteElements('modTemplateVarResourceGroup', $errorstring);
+                    if ( !$result ) return false;
+                }
+
+                /* Create */
+                foreach ( $evoTvAccess as $tvAccess ) {
+
+                    $tvAccessObject = $this->modx->newObject('modTemplateVarResourceGroup');
+                    /* Re-map the resource group and the TV id */
+                    $tvAccess['documentgroup'] = $docgroupMap[$tvAccess['documentgroup']];
+                    if ( $tvAccess['documentgroup'] == null ) continue;
+                    $tvAccess['tmplvarid'] = $tvMap[$tvAccess['tmplvarid']];
+                    if ( $tvAccess['tmplvarid'] == null ) continue;
+                    $tvAccessObject->fromArray($tvAccess);
+                    if ($tvAccessObject->save() == false) {
+
+                        $errorstring = $this->modx->lexicon('evoimporttvaccessfail');
+                        $errorstring .= $tvAccess['tmplvarid'];
+                        return false;
+                    }
+
+                }
+
+            } // TV resource
+
+       } // TV smart mode
+
+        /* Next, get the snippets if needed and assign them the new categories */
+        if ( $haveSnippets ) {
+
+            /* Delete existing if requested */
+            if ( $deletebefore ) {
+
+                $result = $this->_deleteElements('modSnippet', $errorstring);
+                if ( !$result ) return false;
+            }
+
+            foreach ($evoSnippets as $snippet ) {
+
+                 $snippet['category'] = $categoryMap[$snippet['category']];
+
+                 /* Create them */
+                 $snippetObject = $this->modx->newObject('modSnippet');
+                 $snippetObject->fromArray($snippet);
+                 if ($snippetObject->save() == false) {
+
+                        $errorstring = $this->modx->lexicon('evoimportsnippetfail');
+                        $errorstring .= $snippet['name'];
+                        return false;
+                }
+
+             }
+
+        } // Have snippets
+
+         /* Next, get the chunks if needed and assign them the new categories */
+        if ( $haveChunks ) {
+
+            /* Delete existing if requested */
+            if ( $deletebefore ) {
+
+                $result = $this->_deleteElements('modChunk', $errorstring);
+                if ( !$result ) return false;
+            }
+
+            foreach ($evoChunks as $chunk ) {
+
+                 $chunk['category'] = $categoryMap[$chunk['category']];
+
+                 /* Tag convert */
+                 $translator->translate($chunk['snippet']);
+                 
+                 /* Create them */
+                 $chunkObject = $this->modx->newObject('modChunk');
+                 $chunkObject->fromArray($chunk);
+                 if ($chunkObject->save() == false) {
+
+                        $errorstring = $this->modx->lexicon('evoimportchunkfail');
+                        $errorstring .= $chunk['name'];
+                        return false;
+                }
+
+             }
+
+        } // Have chunks
+
+        /* Next, get the plugins if needed and assign them the new categories */
+        if ( $havePlugins ) {
+
+            /* Delete existing if requested */
+            if ( $deletebefore ) {
+
+                $result = $this->_deleteElements('modPlugin', $errorstring);
+                if ( !$result ) return false;
+            }
+
+            foreach ($evoPlugins as $plugin ) {
+
+                 $plugin['category'] = $categoryMap[$plugin['category']];
+
+                 /* Create them */
+                 $pluginObject = $this->modx->newObject('modPlugin');
+                 $pluginObject->fromArray($plugin);
+                 if ($pluginObject->save() == false) {
+
+                        $errorstring = $this->modx->lexicon('evoimportpluginfail');
+                        $errorstring .= $plugin['name'];
+                        return false;
+                }
+
+                /* Update the map */
+                $pluginMap[$plugin['id']] = $pluginObject->get('id');
+
+             }  
+
+            /* If smart mode is on create the associated data */
+            if ( $smartmode ) {
+
+                /* Plugin events */
+                if ( $havePluginEvent ) {
+
+                    /* Delete existing if requested */
+                    if ( $deletebefore ) {
+
+                        $result = $this->_deleteElements('modPluginEvent', $errorstring);
+                        if ( !$result ) return false;
+                    }
+
+                    /* Create the events */
+                    foreach ( $evoPluginEventMap as $eventMap ) {
+
+                        /* Check we have a local event of the same name */
+                        $eventName = $evoPluginEvent[$eventMap['evtid']];
+                        $c = $this->modx->newQuery('modEvent');
+                        $c->where(array('name' => $eventName['name']));
+                        $localEvent = $this->modx->getObject('modEvent',$c);
+                        if ( $localEvent ) {
+
+                            /* Yes, create the event map */
+                            $pluginId = $pluginMap[$eventMap['pluginid']];
+                            $eventMap['pluginid'] = $pluginId;
+                            $eventMap['event'] = $eventName['name'];
+                            $eventMapObject = $this->modx->newObject('modPluginEvent');
+                            $eventMapObject->fromArray($eventMap, '', true);
+                            if ($eventMapObject->save() == false) {
+
+                                $errorstring = $this->modx->lexicon('evoimportplugineventfail');
+                                $errorstring .= $pluginId;
+                                return false;
+                            }
+                        }
+                    }
+                    
+                } // Have plugin events
+                    
+            } // Plugin smartmode
+
+        } // Have plugins
+
+        /* Clear the cache */
+        $contexts = $this->modx->getCollection('modContext');
+        foreach ($contexts as $context) {
+            $paths[] = $context->get('key') . '/';
+         }
+         $options = array(
+            'publishing' => 1,
+            'extensions' => array('.cache.php', '.msg.php', '.tpl.php'),
+         );
+         if ($this->modx->getOption('cache_db')) $options['objects'] = '*';
+         $this->modx->cacheManager->clearCache($paths, $options);
+
+         /* Done, exit */
+         return true;
+       
+   }
+
+   /**
+     * Evolution site import resources
+     *
+     * @access private
+     * @param $evoResources the imported resources
+     * @param $evoKeywords the imported resources keywords
+     * @param $evoMetatags the imported resources metatags
+     * @param $evoDocgroups the imported docgroups and resource mapping
+     * @param $smartmode smart mode
+     * @param $errorstring reported error string
+     *
+     */
+   function _getAllEvoResources(&$evoResources, &$evoKeywords, &$evoMetatags,
+                                &$evoDocgroups, $smartmode, &$errorstring) {
+
+       $resourceArray = array();
+       $keywordArray = array();
+       $metatagArray = array();
+       $docgroupArray = array();
+
+       $url = $this->_connectorURL."/assets/snippets/revogateway/connectors/index.php?action=getall&entity=resources";
+       curl_setopt($this->_curlSession, CURLOPT_URL, $url);
+       $result = curl_exec($this->_curlSession);
+
+       /* Decode the result */
+       $resourceArray = $this->modx->fromJSON($result);
+
+       /* Check if we succeeded */
+       if ( $resourceArray['success'] != 1 ) {
+
+            $errorstring = $this->modx->lexicon('failedtogetremoteresource')." ".$resourceArray['message'];
+            return false;
+        }
+
+        /* Assign the resources */
+        $evoResources = $resourceArray['object'];
+
+        /* If not in smart mode return here */
+        if ( !$smartmode ) return true;
+        
+        /* Get the keywords and the Xref data */
+        $url = $this->_connectorURL."/assets/snippets/revogateway/connectors/index.php?action=getall&entity=keywords";
+        curl_setopt($this->_curlSession, CURLOPT_URL, $url);
+        $result = curl_exec($this->_curlSession);
+
+        /* Decode the result */
+       $keywordArray = $this->modx->fromJSON($result);
+
+       /* Check if we succeeded */
+       if ( $keywordArray['success'] != 1 ) {
+
+            $errorstring = $this->modx->lexicon('failedtogetremotekeywords')." ".$keywordArray['message'];
+            return false;
+        }
+
+        /* Assign the keywords */
+        $evoKeywords = $keywordArray['object'];
+        
+        /* Get the metatag data */
+        $url = $this->_connectorURL."/assets/snippets/revogateway/connectors/index.php?action=getall&entity=metatags";
+        curl_setopt($this->_curlSession, CURLOPT_URL, $url);
+        $result = curl_exec($this->_curlSession);
+
+        /* Decode the result */
+       $metatagArray = $this->modx->fromJSON($result);
+
+       /* Check if we succeeded */
+       if ( $metatagArray['success'] != 1 ) {
+
+            $errorstring = $this->modx->lexicon('failedtogetremotemetatags')." ".$metatagArray['message'];
+            return false;
+        }
+
+        /* Assign the metatags */
+        $evoMetatags = $metatagArray['object'];
+
+        /* Get the document groups and the assigned resources */
+        $url = $this->_connectorURL."/assets/snippets/revogateway/connectors/index.php?action=getall&entity=docgroups";
+        curl_setopt($this->_curlSession, CURLOPT_URL, $url);
+        $result = curl_exec($this->_curlSession);
+
+        /* Decode the result */
+       $docgroupArray = $this->modx->fromJSON($result);
+
+        /* Check if we succeeded */
+       if ( $docgroupArray['success'] != 1 ) {
+
+            $errorstring = $this->modx->lexicon('failedtogetremotedocgroups')." ".$docgroupArray['message'];
+            return false;
+        }
+
+        /* Assign the docgroups */
+        $evoDocgroups = $docgroupArray['object'];
+
+        /* Ok, exit */
+        return true;
+   }
+
+   /**
+     * Evolution site import TV data
+     *
+     * @access private
+     * @param $evoTVAccess the imported access rights
+     * @param $evoTVTemplate  the imported TV template mapping
+     * @param $evoTVContent the imported TV content
+     * @param $errorstring reported error string
+     *
+     */
+   function _getAllEvoTVData(&$evoTVAccess, &$evoTVTemplate,
+                             &$evoTVContent, &$errorstring) {
+
+       $resultArray = array();
+
+       /* Get the tv data */
+       $url = $this->_connectorURL."/assets/snippets/revogateway/connectors/index.php?action=getalltvdata&entity=elements";
+       curl_setopt($this->_curlSession, CURLOPT_URL, $url);
+       $result = curl_exec($this->_curlSession);
+
+       /* Decode the result */
+       $resultArray = $this->modx->fromJSON($result);
+
+       /* Check if we succeeded */
+       if ( $resultArray['success'] != 1 ) {
+
+            $errorstring = $this->modx->lexicon('failedtogetremotetvdata')." ".$resultArray['message'];
+            return false;
+        }
+
+        /* Assign the elements */
+        $evoTVAccess = $resultArray['object'][0];
+        $evoTVTemplate = $resultArray['object'][1];
+        $evoTVContent = $resultArray['object'][2];
+
+        return true;
+
+   }
+
+
+    /**
+     * Evolution site import plugin events
+     *
+     * @access private
+     * @param $evoPluginEvents the imported plugin event names
+     * @param $evoPluginEventMap the imported plugin event map
+     * @param $errorstring reported error string
+     *
+     */
+   function _getAllEvoPluginEvents(&$evoPluginEvents, &$evoPluginEventMap,
+                                   &$errorstring) {
+
+       $resultArray = array();
+
+       /* Get the plugin data */
+       $url = $this->_connectorURL."/assets/snippets/revogateway/connectors/index.php?action=getallpluginevents&entity=elements";
+       curl_setopt($this->_curlSession, CURLOPT_URL, $url);
+       $result = curl_exec($this->_curlSession);
+
+       /* Decode the result */
+       $resultArray = $this->modx->fromJSON($result);
+
+       /* Check if we succeeded */
+       if ( $resultArray['success'] != 1 ) {
+
+            $errorstring = $this->modx->lexicon('failedtogetremotepluginevents')." ".$resultArray['message'];
+            return false;
+        }
+
+        /* Assign the elements */
+        $evoPluginEvents = $resultArray['object'][0];
+        $evoPluginEventMap = $resultArray['object'][1];
+
+        return true;
+
+   }
+
+   /**
+     * Evolution site import elements
+     *
+     * @access private
+     * @param $evoElements the imported elements
+     * @param $errorstring reported error string
+     *
+     */
+   function _getAllEvoElements(&$evoElements, $type, &$errorstring) {
+
+       $elementArray = array();
+
+       $url = $this->_connectorURL."/assets/snippets/revogateway/connectors/index.php?action=getall&entity=elements&type=$type";
+       curl_setopt($this->_curlSession, CURLOPT_URL, $url);
+       $result = curl_exec($this->_curlSession);
+
+       /* Decode the result */
+       $elementArray = $this->modx->fromJSON($result);
+
+       /* Check if we succeeded */
+       if ( $elementArray['success'] != 1 ) {
+
+            $errorstring = $this->modx->lexicon('failedtogetremoteelement')." ".$elementArray['message'];
+            return false;
+        }
+
+        /* Assign the elements */
+        $evoElements = $elementArray['object'];
+        return true;
+   }
+
+   /**
+     * Delete elements
+     *
+     * @access private
+     * @param $classname the MODx classname to delete
+     * @param $errorstring reported error string
+     *
+     */
+   function _deleteElements($classname, &$errorstring) {
+
+        $result = $this->modx->removeCollection($classname, null);
+        if ( $result === false ) {
+
+            $errorstring = $this->modx->lexicon('failedtoremovelements') . $classname;
+            return false;
+        }
+
+        return true;
+
+   }
+        
 }

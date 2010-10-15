@@ -39,7 +39,15 @@ switch ( $entity) {
 
     case 'resources' :
 
-         $scriptProperties['id'] = $_GET['id'];
+        /* Get all call for full site import */
+        if ( $action == 'getall' ) {
+
+           include "resources/getall.php";
+            break;
+        }
+
+        /* Otherwise single resource or tree */
+        $scriptProperties['id'] = $_GET['id'];
 
         if ( $action == 'getnodes' ) {
           
@@ -52,15 +60,37 @@ switch ( $entity) {
         if ( $action == 'get' ) {
 
             include "resources/get.php";
-
         }
 
         break;
 
     case 'elements' :
 
-        $scriptProperties['id'] = $_GET['id'];
         $scriptProperties['type'] = $_GET['type'];
+        
+        /* Get all call for full site import */
+        if ( $action == 'getall' ) {
+
+           include "elements/getall.php";
+           break;
+        }
+
+        /* Get all TV data call for full site import */
+        if ( $action == 'getalltvdata' ) {
+
+           include "elements/getalltvdata.php";
+           break;
+        }
+
+        /* Get all plugin event call for full site import */
+        if ( $action == 'getallpluginevents' ) {
+
+           include "elements/getallpluginevents.php";
+           break;
+        }
+
+        $scriptProperties['id'] = $_GET['id'];
+        
 
         if ( $action == 'getnodes' ) {
 
@@ -118,6 +148,36 @@ switch ( $entity) {
             include "users/get.php";
         }
         
+        break;
+
+    case 'keywords' :
+
+        /* Get all call for full site import */
+        if ( $action == 'getall' ) {
+
+           include "resources/getallkeywords.php";
+        }
+        
+        break;
+
+    case 'metatags' :
+
+        /* Get all call for full site import */
+        if ( $action == 'getall' ) {
+
+           include "resources/getallmetatags.php";
+        }
+
+        break;
+
+    case 'docgroups' :
+
+        /* Get all call for full site import */
+        if ( $action == 'getall' ) {
+
+           include "resources/getalldocgroups.php";
+        }
+
         break;
 
     default:

@@ -1,5 +1,11 @@
 
 
+Changes incorporated into 1.8-beta
+----------------------------------
+
+Fixes for issues 20, 21, 22 and 5(new site import tab)
+plus numerous GUI tidy ups.
+
 Changes incorporated into 1.7-beta
 ----------------------------------
 

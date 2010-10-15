@@ -65,6 +65,8 @@ PV.panel.Home = function(config) {
                 xtype: 'pv-panel-packages'
 			},{
                 xtype: 'pv-panel-users'
+            },{
+                xtype: 'pv-panel-evoimport'
             }]
     });
     PV.panel.Home.superclass.constructor.call(this,config);

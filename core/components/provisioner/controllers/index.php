@@ -37,4 +37,7 @@ $modx->regClientStartupScript($assetsUrl . 'js/packages/packages.js');
 /* Users */ 
 $modx->regClientStartupScript($assetsUrl . 'js/users/pv.user.grid.js');
 $modx->regClientStartupScript($assetsUrl . 'js/users/users.js');
+/* Evolution import*/ 
+$modx->regClientStartupScript($assetsUrl . 'js/evoimport/evoimport.js');
+
 return $modx->smarty->fetch('pvindex.tpl');

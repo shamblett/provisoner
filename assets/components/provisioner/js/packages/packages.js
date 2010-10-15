@@ -19,21 +19,12 @@ PV.panel.Packages = function(config) {
             ,cls: 'modx-page-header'
             ,id: 'pv-packages-header'
         },{            
-            xtype: 'portal'
-            ,items: [{
-                columnWidth: .55
-                ,items: [{
-                    title: _('packages')
-                    ,layout: 'form'
-                     ,collapsible: false
-                    ,items: [{
-                        html: '<p>'+_('packages_desc')+'</p>'
-                        ,border: false
-                    },{
-                        xtype: 'pv-grid-package'
-                    }]
-                }]
-        	}]
+            html: '<p>'+_('packages_desc')+'</p>'
+            ,border: false
+
+        },{
+             xtype: 'pv-grid-package'
+                  
 		}]
     });
     PV.panel.Packages.superclass.constructor.call(this,config);

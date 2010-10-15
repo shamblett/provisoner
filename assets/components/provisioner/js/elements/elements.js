@@ -19,21 +19,12 @@ PV.panel.Elements = function(config) {
             ,cls: 'modx-page-header'
             ,id: 'pv-elements-header'
         },{            
-            xtype: 'portal'
-            ,items: [{
-                columnWidth: .47
-                ,items: [{
-                    title: _('pv_elements')
-                    ,layout: 'form'
-                     ,collapsible: false
-                    ,items: [{
-                        html: '<p>'+_('elements_desc')+'</p>'
-                        ,border: false
-                    },{
-                        xtype: 'pv-tree-element'
-                    }]
-                }]
-        	}]
+            html: '<p>'+_('elements_desc')+'</p>'
+            ,border: false
+
+        },{
+            xtype: 'pv-tree-element'    
+        	
 		}]
     });
     PV.panel.Elements.superclass.constructor.call(this,config);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Provisioner evolution elements
+ * Provisioner evolution get all elements
  *
  * @category  Provisioning
  * @author    S. Hamblett <steve.hamblett@linux.com>
@@ -11,11 +11,12 @@
  * @package provisioner
  */
 
+$elementArray = array();
+
 /* Protection */
 if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
 $type = $scriptProperties['type'];
-$id = $scriptProperties['id'];
 
 $db = mysql_connect($database_server, $database_user, $database_password);
 if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
@@ -29,140 +30,109 @@ switch ( $type ) {
     
     case 'snippet' :
         
-        $sql = "SELECT * FROM " . $table_prefix . "site_snippets" .
-               " WHERE `id` = " . $id;
+        $sql = "SELECT * FROM " . $table_prefix . "site_snippets";
         $result = mysql_query($sql, $db);
-        if (mysql_num_rows($result) == 0) {
-            
-            $response = errorFailure("No snippet found",
-                        array('id' => $id));
-               
-        } else {
         
-            $element = mysql_fetch_assoc($result);
+        while ( $element = mysql_fetch_assoc($result)) {
+
             $element['name'] = utf8_encode($element['name']);
             $element['description'] = utf8_encode($element['description']);
             $element['snippet'] = utf8_encode($element['snippet']);
-            $response = errorSuccess('',$element);
+            $elementArray[] = $element;
         }
 
+        $response = errorSuccess('',$elementArray);
         mysql_close($db);
         echo toJSON($response);
         break;
 
     case 'chunk' :
 
-        $sql = "SELECT * FROM " . $table_prefix . "site_htmlsnippets" .
-               " WHERE `id` = " . $id;
+        $sql = "SELECT * FROM " . $table_prefix . "site_htmlsnippets";
         $result = mysql_query($sql, $db);
-        if (mysql_num_rows($result) == 0) {
+  
+        while ( $element = mysql_fetch_assoc($result) ) {
 
-            $response = errorFailure("No chunk found",
-                        array('id' => $id));
-
-        } else {
-
-            $element = mysql_fetch_assoc($result);
             $element['name'] = utf8_encode($element['name']);
             $element['description'] = utf8_encode($element['description']);
             $element['snippet'] = utf8_encode($element['snippet']);
-            $response = errorSuccess('',$element);
+            $elementArray[] = $element;
         }
 
+        $response = errorSuccess('',$elementArray);
         mysql_close($db);
         echo toJSON($response);
         break;
 
     case 'template' :
 
-        $sql = "SELECT * FROM " . $table_prefix . "site_templates" .
-               " WHERE `id` = " . $id;
+        $sql = "SELECT * FROM " . $table_prefix . "site_templates";
         $result = mysql_query($sql, $db);
-        if (mysql_num_rows($result) == 0) {
+        
+        while ( $element = mysql_fetch_assoc($result) ) {
 
-            $response = errorFailure("No template found",
-                        array('id' => $id));
-
-        } else {
-
-            $element = mysql_fetch_assoc($result);
             $element['templatename'] = utf8_encode($element['templatename']);
             $element['description'] = utf8_encode($element['description']);
             $element['content'] = utf8_encode($element['content']);
-            $response = errorSuccess('',$element);
+            $elementArray[] = $element;
         }
 
+        $response = errorSuccess('',$elementArray);
         mysql_close($db);
         echo toJSON($response);
         break;
 
     case 'plugin' :
 
-        $sql = "SELECT * FROM " . $table_prefix . "site_plugins" .
-               " WHERE `id` = " . $id;
+        $sql = "SELECT * FROM " . $table_prefix . "site_plugins";
         $result = mysql_query($sql, $db);
-        if (mysql_num_rows($result) == 0) {
+        
+        while ( $element = mysql_fetch_assoc($result) ) {
 
-            $response = errorFailure("No plugin found",
-                        array('id' => $id));
-
-        } else {
-
-            $element = mysql_fetch_assoc($result);
             $element['name'] = utf8_encode($element['name']);
             $element['description'] = utf8_encode($element['description']);
             $element['plugincode'] = utf8_encode($element['plugincode']);
             $element['properties'] = utf8_encode($element['properties']);
-            $response = errorSuccess('',$element);
+            $elementArray[] = $element;
         }
 
+        $response = errorSuccess('',$elementArray);
         mysql_close($db);
         echo toJSON($response);
         break;
 
    case 'tv' :
 
-        $sql = "SELECT * FROM " . $table_prefix . "site_tmplvars" .
-               " WHERE `id` = " . $id;
+        $sql = "SELECT * FROM " . $table_prefix . "site_tmplvars";
         $result = mysql_query($sql, $db);
-        if (mysql_num_rows($result) == 0) {
 
-            $response = errorFailure("No TV found",
-                        array('id' => $id));
+        while ( $element = mysql_fetch_assoc($result) ) {
 
-        } else {
-
-            $element = mysql_fetch_assoc($result);
             $element['name'] = utf8_encode($element['name']);
             $element['description'] = utf8_encode($element['description']);
             $element['caption'] = utf8_encode($element['caption']);
             $element['default_text'] = utf8_encode($element['default_text']);
-            
-            $response = errorSuccess('',$element);
+            $elementArray[] = $element;
         }
 
+        $response = errorSuccess('',$elementArray);
         mysql_close($db);
         echo toJSON($response);
         break;
 
   case 'category' :
 
-        $sql = "SELECT * FROM " . $table_prefix . "categories" .
-               " WHERE `id` = " . $id;
+        $sql = "SELECT * FROM " . $table_prefix . "categories";
         $result = mysql_query($sql, $db);
-        if (mysql_num_rows($result) == 0) {
 
-            $response = errorFailure("No category found",
-                        array('id' => $id));
+        while ( $category = mysql_fetch_assoc($result) ) {
 
-        } else {
-
-            $category = mysql_fetch_assoc($result);
             $category['category'] = utf8_encode($category['category'] );
             $category['parent'] = 0;
-            $response = errorSuccess('',$category);
+            $elementArray[] = $category;
         }
 
+        $response = errorSuccess('',$elementArray);
         mysql_close($db);
         echo toJSON($response);
         break;

@@ -19,24 +19,12 @@ PV.panel.Users = function(config) {
             ,cls: 'modx-page-header'
             ,id: 'pv-users-header'
         },{            
-            xtype: 'portal'
-            ,items: [{
-                columnWidth: .85
-                ,items: [{
-                    title: _('users')
-                    ,layout: 'form'
-                    ,autoWidth: true
-                    ,collapsible: false
-                    ,autoHeight: true 
-                    ,items: [{
-                        html: '<p>'+_('users_desc')+'</p>'
-                        ,border: false
-                    },{
-                        xtype: 'pv-grid-user'
-                    }]
-                }]
+              html: '<p>'+_('users_desc')+'</p>'
+              ,border: false
+        },{
+              xtype: 'pv-grid-user'
+                         
         	}]
-		}]
     });
     PV.panel.Users.superclass.constructor.call(this,config);
 };

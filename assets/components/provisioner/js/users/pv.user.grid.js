@@ -1,41 +1,4 @@
 /**
- * Loads a grid of Users.
- * 
- * @class PV.panel.Users
- * @extends MODx.FormPanel
- * @param {Object} config An object of configuration properties
- * @xtype pv-panel-users
- */
-PV.panel.Users = function(config) {
-    config = config || {};
-    Ext.applyIf(config,{
-        id: 'pv-panel-users'
-        ,bodyStyle: ''
-        ,defaults: { collapsible: false ,autoHeight: true }
-        ,items: [{
-            html: '<h2>'+_('users')+'</h2>'
-            ,border: false
-            ,id: 'pv-users-header'
-            ,cls: 'modx-page-header'
-        },{
-            layout: 'form'
-            ,autoWidth: true
-            ,bodyStyle: 'padding: 1.5em'
-            ,items: [{
-                html: '<p>'+_('user_management_msg')+'</p>'
-                ,border: false
-            },{
-                xtype: 'pv-grid-user'
-                ,preventRender: true
-            }]
-        }]
-    });
-    PV.panel.Users.superclass.constructor.call(this,config);
-};
-Ext.extend(PV.panel.Users,MODx.FormPanel);
-Ext.reg('pv-panel-users',PV.panel.Users);
-
-/**
  * Loads a grid of MODx users.
  * 
  * @class PV.grid.User
@@ -51,6 +14,7 @@ PV.grid.User = function(config) {
             action: 'users/getlist'
 		}
 		,preventRender: true
+        ,autoWidth: true
 		,fields: ['id','type','username','fullname','email'
             ,'gender','blocked','role','menu']
         ,columns: this.getColumns()

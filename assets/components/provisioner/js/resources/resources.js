@@ -19,21 +19,12 @@ PV.panel.Resources = function(config) {
             ,cls: 'modx-page-header'
             ,id: 'pv-resources-header'
         },{            
-            xtype: 'portal'
-            ,items: [{
-                columnWidth: .47
-                ,items: [{
-                    title: _('pv_resources')
-                    ,layout: 'form'
-                     ,collapsible: false
-                    ,items: [{
-                        html: '<p>'+_('resources_desc')+'</p>'
-                        ,border: false
-                    },{
-                        xtype: 'pv-tree-resource'
-                    }]
-                }]
-        	}]
+            html: '<p>'+_('resources_desc')+'</p>'
+            ,border: false
+
+         },{
+            xtype: 'pv-tree-resource'     
+        	
 		}]
     });
     PV.panel.Resources.superclass.constructor.call(this,config);

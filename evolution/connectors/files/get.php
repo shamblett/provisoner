@@ -27,7 +27,10 @@ if (!file_exists($file)) {
 
 $filename = ltrim(strrchr($file,'/'),'/');
 
+/* Encode into base64 for transmission */
 $fbuffer = @file_get_contents($file);
+$fbuffer = base64_encode($fbuffer);
+
 $time_format = '%b %d, %Y %H:%I:%S %p';
 
 $fa = array(
