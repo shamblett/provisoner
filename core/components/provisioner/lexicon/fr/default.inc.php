@@ -14,6 +14,7 @@
  */
 $_lang['provisioner'] = 'Provisioner';
 $_lang['button_go'] = 'Valider';
+$_lang['button_import'] = 'Importer';
 $_lang['menu_account'] = 'Utilisateur';
 $_lang['menu_provisioner'] = 'Provisioner';
 $_lang['menu_administration'] = 'Serveur distant';
@@ -71,6 +72,8 @@ $_lang['localinstall'] = 'Installés localement';
 $_lang['local_installed'] = 'oui';
 $_lang['not_local_installed'] = 'non';
 $_lang['menu_users_tab'] = 'Utilisateurs';
+$_lang['menu_evoimport_tab'] = 'Import de site Evolution';
+$_lang['menu_evoimport'] = 'Import de site Evolution';
 $_lang['users'] = 'Utilisateurs distants';
 $_lang['users_desc'] = 'Les utilisateurs existant sur le site distant';
 $_lang['getusersfailed'] = 'Chargement de l\'utilisateur échoué';
