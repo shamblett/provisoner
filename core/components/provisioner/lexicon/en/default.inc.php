@@ -2,112 +2,160 @@
 /**
  * Provisioner lexicon
  *
- * @category   Provisioning
- * @author     S. Hamblett <steve.hamblett@linux.com>
- * @copyright  2009 S. Hamblett
- * @license    GPLv3 http://www.gnu.org/licenses/gpl.html
- * @link       none
- * @language   de
+ * @category  Provisioning
+ * @author    S. Hamblett <steve.hamblett@linux.com>
+ * @copyright 2009 S. Hamblett
+ * @license   GPLv3 http://www.gnu.org/licenses/gpl.html
+ * @link      none
+ * @language en
  *
- * @package    provisioner
+ * @package   provisioner
  * @subpackage lexicon
  */
 $_lang['provisioner'] = 'Provisioner';
-$_lang['button_go'] = 'Start';  // Go => Los?
-$_lang['menu_account'] = 'Benutzer';  // Benutzername ist zu lang!
+$_lang['button_go'] = 'Go';
+$_lang['button_import'] = 'Import';
+$_lang['menu_account'] = 'Account';
 $_lang['menu_provisioner'] = 'Provisioner';
-$_lang['menu_administration'] = 'Verwaltung der auf dem fernen Server befindlichen Site';
-$_lang['menu_administration_tab'] = 'Verwaltung';
-$_lang['menu_resources'] = 'Ressourcen';
-$_lang['menu_password'] = 'Passwort';
-$_lang['menu_elements'] = 'Elemente';
-$_lang['menu_files'] = 'Dateien';
+$_lang['menu_administration'] = 'Remote Site Administration';
+$_lang['menu_administration_tab'] = 'Administration';
+$_lang['menu_resources'] = 'Resources';
+$_lang['menu_password'] = 'Password';
+$_lang['menu_elements'] = 'Elements';
+$_lang['menu_files'] = 'Files';
 $_lang['menu_url'] = 'URL';
-$_lang['noaccount_error'] = 'Kein Account angegeben';
-$_lang['nopassword_error'] = 'Kein Passwort angegeben';
-$_lang['nourl_error'] = 'Keine Konnektor-URL angegeben';
-$_lang['loginsuccess'] = 'Login in die ferne Site erfolgreich';
-$_lang['loginfailed'] = 'Login in die ferne Site fehlgeschlagen';
-$_lang['logoutsuccess'] = 'Logout aus der fernen Site erfolgreich';
-$_lang['logoutfailed'] = 'Logout aus der fernen Site fehlgeschlagen';
-$_lang['wronguser'] = 'Es ist bereits ein Benutzer eingeloggt';
+$_lang['noaccount_error'] = 'No Account supplied';
+$_lang['nopassword_error'] = 'No Password supplied';
+$_lang['nourl_error'] = 'No Connector URL supplied';
+$_lang['loginsuccess'] = 'Login to the Remote Site successful';
+$_lang['loginfailed'] = 'Login to the Remote Site failed';
+$_lang['logoutsuccess'] = 'Logout of the Remote Site successful';
+$_lang['logoutfailed'] = 'Logout of the Remote Site failed';
+$_lang['wronguser'] = 'A user is already logged in';
 $_lang['radio_login'] = 'Login';
 $_lang['radio_logout'] = 'Logout';
-$_lang['notloggedin'] = 'Nicht eingeloggt';
-$_lang['urlnotfound'] = 'Konnektor-URL nicht gefunden';
-$_lang['unknownerror'] = 'Unbekannter Fehler';
-$_lang['pv_resources'] = 'Ferne Ressourcen';
-$_lang['resources_desc'] = 'Ressourcen, die in der fernen Site vorhanden sind';
-$_lang['menu_resources_tab'] = 'Ressourcen';
-$_lang['getresourcesfailed'] = 'Laden der fernen Ressourcen fehlgeschlagen';
-$_lang['resource_menu'] = 'Ferne Ressourcen';
+$_lang['notloggedin'] = 'Not logged in';
+$_lang['urlnotfound'] = 'Connector URL not found';
+$_lang['unknownerror'] = 'Unknown error';
+$_lang['pv_resources'] = 'Remote Resources';
+$_lang['resources_desc'] = 'Resources present in the remote site';
+$_lang['menu_resources_tab'] = 'Resources';
+$_lang['getresourcesfailed'] = 'Failed to get remote resources';
+$_lang['resource_menu'] = 'Remote Resources';
 $_lang['import_resource'] = 'Import';
-$_lang['importresourcesfailed'] = 'Import der fernen Ressourcen fehlgeschlagen';
-$_lang['importsuccess'] = 'Import der fernen Ressourcen erfolgreich';
-$_lang['invalidresourceid'] = 'Die Ressourcen-ID ist ungültig';
-$_lang['failedtogetremoteresource'] = 'Kann ferne Ressource nicht laden';
-$_lang['failedtocreatelocalresource'] = 'Kann die lokale Ressource nicht anlegen';
-$_lang['menu_elements_tab'] = 'Elemente';
-$_lang['pv_elements'] = 'Ferne Elemente';
-$_lang['elements_desc'] = 'Elemente, die in der fernen Site vorhanden sind';
-$_lang['getelementsfailed'] = 'Laden der fernen Elemente fehlgeschlagen';
+$_lang['importresourcesfailed'] = 'Failed to import remote resources';
+$_lang['importsuccess'] = 'Import of the remote resources successful';
+$_lang['invalidresourceid'] = 'The resource id is invalid';
+$_lang['failedtogetremoteresource'] = 'Cannot get remote resource';
+$_lang['failedtocreatelocalresource'] = 'Cannot create the local resource';
+$_lang['menu_elements_tab'] = 'Elements';
+$_lang['pv_elements'] = 'Remote Elements';
+$_lang['elements_desc'] = 'Elements present in the remote site';
+$_lang['getelementsfailed'] = 'Failed to get remote elements';
 $_lang['import_element'] = 'Import';
-$_lang['importelementsfailed'] = 'Import der fernen Elemente fehlgeschlagen';
-$_lang['failedtocreatelocalelement'] = 'Kann das lokale Element nicht anlegen';
-$_lang['notyetimplemented'] = 'Funktion noch nicht implementiert - sorry!';
-$_lang['menu_files_tab'] = 'Dateien';
-$_lang['pv_files'] = 'Ferne Dateien';
-$_lang['files_desc'] = 'Dateien, die in der fernen Site vorhanden sind';
-$_lang['getfilesfailed'] = 'Laden der fernen Dateien fehlgeschlagen';
+$_lang['importelementsfailed'] = 'Failed to import remote elements';
+$_lang['failedtocreatelocalelement'] = 'Cannot create the local element';
+$_lang['notyetimplemented'] = 'Function not yet implemented - Sorry!';
+$_lang['menu_files_tab'] = 'Files';
+$_lang['pv_files'] = 'Remote Files';
+$_lang['files_desc'] = 'Files present in the remote site';
+$_lang['getfilesfailed'] = 'Failed to get remote files';
 $_lang['import_file'] = 'Import';
-$_lang['nofilename'] = 'Dateiname nicht angegeben';
-$_lang['nopathname'] = 'Pfad nicht angegeben';  // Path name => Verzeichnisname?
+$_lang['nofilename'] = 'File name not supplied';
+$_lang['nopathname'] = 'Path name not supplied';
 $_lang['menu_packages_tab'] = 'Packages';
-$_lang['packages'] = 'Ferne Packages';
-$_lang['packages_desc'] = 'Packages, die in der fernen Site installiert sind';
-$_lang['getpackagesfailed'] = 'Laden der fernen Packages fehlgeschlagen';
-$_lang['package_signature'] = 'Package-Name';
-$_lang['localinstall'] = 'Lokal installiert';
-$_lang['local_installed'] = 'Ja';
-$_lang['not_local_installed'] = 'Nein';
-$_lang['menu_users_tab'] = 'Benutzer';
-$_lang['users'] = 'Ferne Benutzer';
-$_lang['users_desc'] = 'Benutzer, die in der fernen Site vorhanden sind';
-$_lang['getusersfailed'] = 'Laden der fernen Benutzer fehlgeschlagen';
-$_lang['user_full_name'] = 'Vollständiger Name';
-$_lang['user_block'] = 'Gesperrt';
+$_lang['packages'] = 'Remote Packages';
+$_lang['packages_desc'] = 'Packages installed in the remote site';
+$_lang['getpackagesfailed'] = 'Failed to get remote packages';
+$_lang['package_signature'] = 'Package Name';
+$_lang['localinstall'] = 'Installed Locally';
+$_lang['local_installed'] = 'Yes';
+$_lang['not_local_installed'] = 'No';
+$_lang['menu_users_tab'] = 'Users';
+$_lang['menu_evoimport_tab'] = 'Evolution Site Import';
+$_lang['menu_evoimport'] = 'Evolution Site Import';
+$_lang['users'] = 'Remote Users';
+$_lang['users_desc'] = 'Users present in the remote site';
+$_lang['getusersfailed'] = 'Failed to get remote users';
+$_lang['user_full_name'] = 'Full name';
+$_lang['user_block'] = 'Blocked';
 $_lang['import_user'] = 'Import';
-$_lang['importusersfailed'] = 'Import der fernen Benutzer fehlgeschlagen';
-$_lang['invaliduserid'] = 'Die Benutzer-ID ist ungültig';
-$_lang['failedtocreatelocaluser'] = 'Kann den lokalen Benutzer nicht anlegen';
-$_lang['failedtocreatelocaluserprofile'] = 'Kann das lokale Benutzerprofil nicht anlegen';
-$_lang['failedtocreatelocalfile'] = 'Kann die lokale Datei nicht anlegen';
-$_lang['failedtocreatelocalfolder'] = 'Kann das lokale Verzeichnis nicht anlegen';
-$_lang['provisioner.desc'] = 'Eine Komponente, die die lokale Bereitstellung von Daten einer fernen Revolution- oder Evolution-Site ermöglicht';
-$_lang['importfilesfailed'] = 'Datei-Import fehlgeschlagen - ferne Site: ';
-/* 1.0 GA additions */
+$_lang['importusersfailed'] = 'Failed to import remote users';
+$_lang['invaliduserid'] = 'The user id is invalid';
+$_lang['failedtocreatelocaluser'] = 'Cannot create the local user';
+$_lang['failedtocreatelocaluserprofile'] = 'Cannot create the local user profile';
+$_lang['failedtocreatelocalfile'] = 'Cannot create the local file';
+$_lang['failedtocreatelocalfolder'] = 'Cannot create the local folder';
+$_lang['provisioner.desc'] = 'A component to allow local provisioning from a remote Revolution or Evolution site';
+$_lang['importfilesfailed'] = 'File import failed - Remote: ';
 $_lang['revolution'] = 'Revolution';
 $_lang['evolution'] = 'Evolution';
-$_lang['remotesite'] = 'Die ferne Site ist';
-$_lang['adminaction'] = 'Aktion';
+$_lang['remotesite'] = 'Remote site is';
+$_lang['adminaction'] = 'Action';
 $_lang['import_convert_resource'] = 'Import Convert Tags';
-$_lang['account_details'] = 'Zugangsdaten und URL der fernen Site';
-$_lang['remote_site'] = 'Typ der fernen Site';
-$_lang['admin_action'] = 'Aktion';
-$_lang['already_imported'] = ': Bereits importiert?';
-$_lang['user_type'] = 'Typ';
-$_lang['user_email'] = 'E-Mail';
-$_lang['importfoldernotwriteable'] = 'Provisioners Import-Verzeichnis ist nicht beschreibbar';
-$_lang['importfilenolength'] = 'Die importierte Datei ist 0 Bytes groß';
-$_lang['admin_remember'] = 'Zur Erinnerung...';
-$_lang['nositeid_error'] = 'Keine Site-ID für die ferne Site angegeben';
-$_lang['menu_siteid'] = 'Site-ID der fernen Site';
-$_lang['nocurl'] = 'Ups! Die PHP-cURL-Erweiterung scheint nicht verfügbar zu sein, bitte installieren Sie diese.';
-$_lang['norevogateway'] = 'Das Revolution-Gateway-Package ist in der fernen Evolution-Site nicht installiert';
-$_lang['admin_helptext'] = "<p>Für Revolution-Sites ist die URL die URL des Verzeichnisses /connectors.
-                Für Evolution-Sites ist dies die URL der Site selbst.</p><p>Der verwendete Account muss für Evolution-Sites ein
-                Manager-Account sein und für Revolution-Sites ein Account mit ausreichenden Rechten, um View-Operationen
-                (auch List-Operationen genannt) durchführen zu können.</p>
-                <p>Die Site-ID der fernen Site muss für Revolution-Sites angegeben werden.</p>
-                <p>Im Zweifelsfall lesen Sie bitte den &quot;Provisioner User Guide&quot;, den Sie im Verzeichnis<br />
-                /assets/components/provisioner/docs finden.</p>";
+$_lang['account_details'] = 'Remote site account credentials and URL';
+$_lang['remote_site'] = 'Remote site type';
+$_lang['admin_action'] = 'Action';
+$_lang['already_imported'] = ': Already imported?';
+$_lang['user_type'] = 'Type';
+$_lang['user_email'] = 'Email';
+$_lang['importfoldernotwriteable'] = 'Provisioners Import folder is not writeable';
+$_lang['importfilenolength'] = 'The imported file length is 0';
+$_lang['admin_remember'] = 'Remember....';
+$_lang['nositeid_error'] = 'No Remote Site Identifier supplied';
+$_lang['menu_siteid'] = 'Remote Site Identifier';
+$_lang['nocurl'] = 'Oops! The PHP CURL package seems not to be present, please install it.';
+$_lang['norevogateway'] = 'Revolution gateway package is not installed in remote Evolution site';
+$_lang['evoimport_context'] = 'Context';
+$_lang['evoimport_parentcategories'] = 'Parent Categories';
+$_lang['evoimport_templates'] = 'Templates';
+$_lang['evoimport_resources'] = 'Resources';
+$_lang['evoimport_tvs'] = 'Template Variables';
+$_lang['evoimport_snippets'] = 'Snippets';
+$_lang['evoimport_chunks'] = 'Chunks';
+$_lang['evoimport_plugins'] = 'Plugins';
+$_lang['evoimport_smartmode'] = 'Smart Mode';
+$_lang['evoimport_deletebefore'] = 'Delete Before Import';
+$_lang['desc_evoimport_localsite'] = 'Import Settings';
+$_lang['desc_evoimport_remotesite'] = 'Include ';
+$_lang['desc_evoimport_importcontrol'] = 'Import Control Settings';
+$_lang['evoimport_context_help'] = 'The local context to import resources into';
+$_lang['evoimport_cat_help'] = 'Parent all imported categories to Provisioner';
+$_lang['evoimport_template_help'] = 'Import templates';
+$_lang['evoimport_resource_help'] = 'Import resources';
+$_lang['evoimport_tv_help'] = 'Import template variables';
+$_lang['evoimport_snippet_help'] = 'Import snippets';
+$_lang['evoimport_chunk_help'] = 'Import chunks';
+$_lang['evoimport_plugin_help'] = 'Import plugins';
+$_lang['evoimport_smartmode_help'] = 'Be smart, link associated data together';
+$_lang['evoimport_deletebefore_help'] = 'Delete locally before importing selection';
+$_lang['administration_account_help'] = 'Remote site Manager account name';
+$_lang['administration_password_help'] = 'Remote site Manager account password';
+$_lang['administration_url_help'] = 'Remote site URL, the connector URL for Revolution sites or the site URL for Evolution sites';
+$_lang['administration_rsi_help'] = 'Remote site identifier, also known as API key, for Revolution sites only';
+$_lang['evoimportfailed'] = 'The site import failed';
+$_lang['evoimportsuccess'] = 'The site import succeded - please check your local site';
+$_lang['evoimportnoselection'] = 'Nothing to import!';
+$_lang['evoimport_importing'] = 'Importing the remote Evolution site....';
+$_lang['notevosite'] = 'You are not logged in to an Evolution site';
+$_lang['actioning'] = 'Actioning....';
+$_lang['evoimportcatfail'] = 'Failed to create category - ';
+$_lang['evoimporttemplatefail'] = 'Failed to create template - ';
+$_lang['failedtoremovelements'] = 'Failed to remove elements - ';
+$_lang['failedtogetremotekeywords'] = 'Failed to get keywords';
+$_lang['failedtogetremotemetatags'] = 'Failed to get metatags';
+$_lang['failedtogetremotedocgroups'] = 'Failed to get document groups';
+$_lang['evoimportresourceefail'] = 'Failed to create resource - ';
+$_lang['failedtogetremotetvdata'] = 'Failed to get TV data groups';
+$_lang['evoimporttvfail'] = 'Failed to create TV - ';
+$_lang['evoimporttvtemplatefail'] = 'Failed to create TV template map for TV id - ';
+$_lang['evoimporttvcontentfail'] = 'Failed to create TV resource map for TV id - ';
+$_lang['evoimporttvaccessfail'] = 'Failed to create TV resource group map for TV id - ';
+$_lang['evoimportsnippetfail'] = 'Failed to create snippet - ';
+$_lang['evoimportchunkfail'] = 'Failed to create chunk - ';
+$_lang['evoimportpluginfail'] = 'Failed to create plugin - ';
+$_lang['failedtogetremotepluginevents'] = 'Failed to get plugin events';
+$_lang['evoimportplugineventfail'] = 'Failed to create plugin event for plugin id - ';
+$_lang['evoimportaborted'] = 'Import aborted by user';
+$_lang['evoimport_importingwarnbox'] = 'WARNING - your site will be overwritten';
+$_lang['evoimport_importingwarntext'] = 'Press yes followed by Import to continue';
