@@ -594,6 +594,7 @@ class Provisioner {
 
     function getFiles($node, &$errorstring, &$nodes) {
 
+        $menu = array();
 
         /* Logged in check */
         if ( $this->_checkLoggedIn() ) {
@@ -619,7 +620,7 @@ class Provisioner {
         $resultarray = $this->modx->fromJSON($result);
 
         /* Create our menu */
-        $menu[] = array(
+        $menu[0] = array(
                 'id' => 'pv-import-file',
                 'text' => $this->modx->lexicon('import_file'),
                 'handler' => 'function(itm,e) {
@@ -627,11 +628,20 @@ class Provisioner {
                     }'
         );
 
-        /* And add it, clearing other fields where needed */
+        /* If an evo site we can import binary files as they are encoded,
+         * if revo we have to check if the 'page' node attribute is null indicating
+         * a binary file.
+         */
         foreach ( $resultarray as &$jsonresult) {
 
             $jsonresult['menu'] = array('items' => $menu);
+            if ( !$this->_remoteIsEvo ) {
 
+                if ( $jsonresult['page'] == '' ) {
+
+                    $jsonresult['menu'] = array('items' => '');
+                }
+            }
         }
 
         /* Re-encode using the responder class toJSON so we encode the js properly */
@@ -2414,21 +2424,23 @@ class Provisioner {
                         return false;
                 }
 
-                /* Update the map */
-                $resourceMap[$resource['id']] = $resourceObject->get('id');
-
+                /* Reset the newly created id to the original one, use
+                 * exec to do this, not xPDO
+                 */
+                $newId = $resourceObject->get('id');
+                $oldId = $resource['id'];
+                $tableName = $this->modx->getTableName('modResource');
+                $sql = "UPDATE $tableName SET `id` = $oldId WHERE `id` = $newId";
+                $this->modx->exec($sql);
+                
+                
+                /* Update the map, redundant with re-linking of the id
+                 * but we'll keep the mechanism in place for now 
+                 */
+                $resourceMap[$resource['id']] = $resource['id'];
+         
             }
-
-            /* Re-parent the resources locally */
-            $resourceCollection = $this->modx->getCollection('modResource');
-            foreach ( $resourceCollection as $newResource ) {
-
-                $oldparent = $newResource->get('parent');
-                $newparent = $resourceMap[$oldparent];
-                $newResource->set('parent', $newparent);
-                $newResource->save();
-            }
-
+            
             /* Check for smart mode */
             if ( $smartmode ) {
 

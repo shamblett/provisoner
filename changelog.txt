@@ -1,4 +1,19 @@
 
+Changes incorporated into 1.9-beta
+----------------------------------
+
+Add index.html files to import and tmp to ensure they are created on 
+installation.
+
+Fix for issue 31, import menu is now only put on files that have a valid page 
+attribute for remote revo installations.
+
+Fix for issue 34, imported user attributes now correctly fetched.
+
+Fix for issue 25, weblinks(reference doc types) are now created correctly on import from 
+evo sites
+
+Fix for issues 26,29, resource id's preserved on import
 
 Changes incorporated into 1.8-beta
 ----------------------------------

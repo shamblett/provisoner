@@ -69,7 +69,7 @@ if ( $username != '' ) {
 foreach ( $manager_users as $manager_user ) {
     
     $sql =  "SELECT fullname, email, blocked FROM " . $table_prefix . "user_attributes" .
-            " WHERE `id` = " . $manager_user['id'];
+            " WHERE `internalKey` = " . $manager_user['id'];
 
     $result = mysql_query($sql, $db);
     while ($manageruser = mysql_fetch_assoc($result)) {
@@ -89,7 +89,7 @@ foreach ( $manager_users as $manager_user ) {
 foreach ( $web_users as $web_user ) {
 
     $sql =  "SELECT fullname, email, blocked FROM " . $table_prefix . "web_user_attributes" .
-            " WHERE `id` = " . $web_user['id'];
+            " WHERE `internalKey` = " . $web_user['id'];
 
     $result = mysql_query($sql, $db);
     while ($webuser = mysql_fetch_assoc($result)) {

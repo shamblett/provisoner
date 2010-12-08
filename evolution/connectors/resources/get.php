@@ -55,7 +55,16 @@ if ( mysql_num_rows($result) == 1 ) {
 
 
 
-$resource['class_key'] = 'modDocument';
+/* Set the class key for correct creation in Revolution */
+if ( $resource['type'] == 'reference') {
+    
+     $resource['class_key'] = 'modWebLink';
+   
+} else {
+    
+    $resource['class_key'] = 'modDocument';
+}
+
 $response = errorSuccess('',$resource);
 mysql_close($db);
 echo toJSON($response);

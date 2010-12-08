@@ -42,7 +42,15 @@ while ($resource = mysql_fetch_assoc($result)) {
     $resource['content'] = utf8_encode($resource['content']);
     $resource['menutitle'] = utf8_encode($resource['menutitle']);
 
-    $resource['class_key'] = 'modDocument';
+    /* Set the class key for correct creation in Revolution */
+    if ( $resource['type'] == 'reference') {
+
+        $resource['class_key'] = 'modWebLink';
+
+    } else {
+
+        $resource['class_key'] = 'modDocument';
+    }
     $resourceArray[] = $resource;
 
 }
