@@ -23,12 +23,7 @@ $elementClassKey = $ar_typemap[$elementIdentifier];
 
 
 /* Get all elements in the category */
-$db = mysql_connect($database_server, $database_user, $database_password);
-if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
-
-$dbase = str_replace('`', '', $dbase);
-$db_selected = mysql_select_db($dbase, $db);
-if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
+$db = connectToDb();
 
 $sql = "SELECT * FROM " . $table_prefix . $ar_tablemap[$elementIdentifier] .
        " WHERE `category` = " . $categoryId;
@@ -38,8 +33,8 @@ $result = mysql_query($sql, $db);
 while ($element = mysql_fetch_assoc($result)) {
 
     $name = $elementIdentifier == 'template' ? $element['templatename'] : $element['name'];
-    $name = utf8_encode($name);
-    $elementIdentifier = utf8_encode($elementIdentifier);
+    $name = $name;
+    $elementIdentifier = $elementIdentifier;
     $class = 'icon-'.$elementIdentifier;
     
     $nodes[] = array(

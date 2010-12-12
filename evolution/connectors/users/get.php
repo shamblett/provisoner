@@ -14,12 +14,7 @@
 /* Protection */
 if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
-$db = mysql_connect($database_server, $database_user, $database_password);
-if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
-
-$dbase = str_replace('`', '', $dbase);
-$db_selected = mysql_select_db($dbase, $db);
-if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
+$db = connectToDb();
 
 /*  Get the user */
 if (  $scriptProperties['type'] == 'manager' ) {
@@ -77,15 +72,6 @@ if (  $scriptProperties['type'] == 'manager' ) {
      }
 
 }
-
-/* UTF8 encoding */
-$user['username'] = utf8_encode($user['name'] );
-$user['fullname'] = utf8_encode($user['fullname'] );
-$user['email'] = utf8_encode($user['email'] );
-$user['country'] = utf8_encode($user['country'] );
-$user['state'] = utf8_encode($user['state'] );
-$user['comment'] = utf8_encode($user['comment'] );
-
 
 /* Formatting */
 $user['dob'] = !empty($user['dob']) ? strftime('%m/%d/%Y',$user['dob']) : '';

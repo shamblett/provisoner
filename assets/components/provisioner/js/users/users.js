@@ -12,6 +12,7 @@ PV.panel.Users = function(config) {
         id: 'pv-panel-users'
 		,title: _('menu_users_tab')
         ,bodyStyle: ''
+        ,padding: 10
         ,defaults: { collapsible: false ,autoHeight: true }
         ,items: [{
             html: '<h2>'+_('users')+'</h2>'

@@ -15,6 +15,12 @@ evo sites
 
 Fix for issues 26,29, resource id's preserved on import
 
+Fix for issue 36, evo site import timeout is now changeable
+on the tab.
+
+Fix for issue 24, resource dates now converted to strings for xPDO.
+
+
 Changes incorporated into 1.8-beta
 ----------------------------------
 

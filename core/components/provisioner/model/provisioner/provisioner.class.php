@@ -117,6 +117,12 @@ class Provisioner {
     private $_tmppath;
 
     /**
+     * @var Evolution import log file
+     * @access private
+     */
+    private $_log;
+
+    /**
      * @var remoteIsEvo indicator, true if evolution
      * @access private
      */
@@ -1655,6 +1661,14 @@ class Provisioner {
         $resourcedata['parent'] = 0;
         $resourcedata['context_key'] = 'provisioner';
 
+        /* Change unix timestamps into date strings for xPDO */
+        $resourcedata['pub_date'] = date("Y-m-d H:i:s" ,  $resourcedata['pub_date']);
+        $resourcedata['unpub_date'] = date("Y-m-d H:i:s" ,  $resourcedata['unpub_date']);
+        $resourcedata['createdon'] = date("Y-m-d H:i:s" ,  $resourcedata['createdon']);
+        $resourcedata['editedon'] = date("Y-m-d H:i:s" ,  $resourcedata['editedon']);
+        $resourcedata['deletedon'] = date("Y-m-d H:i:s" ,  $resourcedata['deletedon']);
+        $resourcedata['publishedon'] = date("Y-m-d H:i:s" ,  $resourcedata['publishedon']);
+
         /* Check for tag conversion */
         if ( $convert ) {
 
@@ -1730,6 +1744,14 @@ class Provisioner {
             $resourcedata['published'] = 0;
             $resourcedata['hidemenu'] = 1;
             $resourcedata['context_key'] = 'provisioner';
+
+            /* Change unix timestamps into date strings for xPDO */
+            $resourcedata['pub_date'] = date("Y-m-d H:i:s" ,  $resourcedata['pub_date']);
+            $resourcedata['unpub_date'] = date("Y-m-d H:i:s" ,  $resourcedata['unpub_date']);
+            $resourcedata['createdon'] = date("Y-m-d H:i:s" ,  $resourcedata['createdon']);
+            $resourcedata['editedon'] = date("Y-m-d H:i:s" ,  $resourcedata['editedon']);
+            $resourcedata['deletedon'] = date("Y-m-d H:i:s" ,  $resourcedata['deletedon']);
+            $resourcedata['publishedon'] = date("Y-m-d H:i:s" ,  $resourcedata['publishedon']);
 
             /* Check for tag conversion */
             if ( $convert ) {
@@ -2206,8 +2228,13 @@ class Provisioner {
          * Importation of requested elements starts here
         */
 
+        /* Open logging */
+        $this->_initialiseImportLog();
+
         /* Get all resources if asked for */
         if ( $importArray['resources'] ) {
+
+            $this->_importLogHeader("Getting resources .........");
 
             $result = $this->_getAllEvoResources($evoResources, $evoKeywords,
                                                  $evoMetatags, $evoDocgroups,
@@ -2215,20 +2242,34 @@ class Provisioner {
             if ( !$result ) return false;
 
             /* Set the 'have' flags */
-            if ( count($evoResources) != 0 ) $haveResources = true;
-            if ( count($evoKeywords) != 0 ) $haveKeywords = true;
-            if ( count($evoMetatags) != 0 ) $haveMetatags = true;
-            if ( count($evoDocgroups) != 0 ) $haveDocgroups = true;
-        }
+            $resourceNo = count($evoResources);
+            $keywordsNo = count($evoKeywords);
+            $metatagsNo = count($evoMetatags);
+            $docGroupsNo = count($evoDocgroups);
 
+            if ( $resourceNo != 0 ) $haveResources = true;
+            if ( $keywordsNo != 0 ) $haveKeywords = true;
+            if ( $metatagsNo != 0 ) $haveMetatags = true;
+            if ( $docGroupsNo != 0 ) $haveDocgroups = true;
+
+            $this->_importLog("Got $resourceNo resources");
+            $this->_importLog("Got $keywordsNo keywords");
+            $this->_importLog("Got $metatagsNo metatags");
+            $this->_importLog("Got $docGroupsNo docgroups");
+        }
+        
         /* Get all templates if asked for */
         if ( $importArray['templates'] ) {
+
+            $this->_importLogHeader("Getting templates .........");
 
             $result = $this->_getAllEvoElements($evoTemplates, "template", $errorstring);
             if ( !$result ) return false;
 
             /* Set the 'have' flag */
-            if ( count($evoTemplates) != 0 ) $haveTemplates = true;
+            $templateNo = count($evoTemplates);
+            if ( $templateNo != 0 ) $haveTemplates = true;
+            $this->_importLog("Got $templateNo templates");
 
             /* if we have this element we need categories */
             $getCategories = true;
@@ -2237,22 +2278,36 @@ class Provisioner {
         /* Get all tv's if asked for */
         if ( $importArray['tvs'] ) {
 
+            $this->_importLogHeader("Getting TV's .........");
+
             $result = $this->_getAllEvoElements($evoTvs, "tv", $errorstring);
             if ( !$result ) return false;
             
             /* Set the 'have' flag */
-            if ( count($evoTvs) != 0 ) $haveTvs = true;
+            $tvNo = count($evoTvs);
+            if ( $tvNo != 0 ) $haveTvs = true;
+            $this->_importLog("Got $tvNo TV's");
             
             /* If smart mode is on get the associated data */
             if ( $smartmode ) {
 
+                $this->_importLogHeader("Getting associated TV data .........");
+
                 $result = $this->_getAllEvoTVData($evoTvAccess, $evoTvTemplate,
                                                   $evoTvContent, $errorstring);
 
-                if ( count($evoTvAccess) != 0 ) $haveTvAccess = true;
-                if ( count($evoTvTemplate) != 0 ) $haveTvTemplate = true;
-                if ( count($evoTvContent) != 0 ) $haveTvContent = true;
+                $tvAccessNo = count($evoTvAccess);
+                $tvTemplateNo = count($evoTvTemplate);
+                $tvContentNo = count($evoTvContent);
 
+                if ( $tvAccessNo != 0 ) $haveTvAccess = true;
+                if ( $tvTemplateNo != 0 ) $haveTvTemplate = true;
+                if ( $tvContentNo != 0 ) $haveTvContent = true;
+
+                $this->_importLog("Got $tvAccessNo TV -> resource group records");
+                $this->_importLog("Got $tvTemplateNo TV -> template records");
+                $this->_importLog("Got $tvContentNo TV -> resource records");
+                
             }
 
             /* if we have this element we need categories */
@@ -2262,11 +2317,15 @@ class Provisioner {
         /* Get all snippets if asked for */
         if ( $importArray['snippets'] ) {
 
+            $this->_importLogHeader("Getting snippets .........");
+
             $result = $this->_getAllEvoElements($evoSnippets, "snippet", $errorstring);
             if ( !$result ) return false;
 
              /* Set the 'have' flag */
-            if ( count($evoSnippets) != 0 ) $haveSnippets = true;
+            $snippetNo = count($evoSnippets);
+            if ( $snippetNo != 0 ) $haveSnippets = true;
+            $this->_importLog("Got $snippetNo snippets");
 
             /* if we have this element we need categories */
             $getCategories = true;
@@ -2275,11 +2334,15 @@ class Provisioner {
         /* Get all chunks if asked for */
         if ( $importArray['chunks'] ) {
 
+            $this->_importLogHeader("Getting chunks .........");
+
             $result = $this->_getAllEvoElements($evoChunks, "chunk", $errorstring);
             if ( !$result ) return false;
 
              /* Set the 'have' flag */
-            if ( count($evoChunks) != 0 ) $haveChunks = true;
+            $chunkNo = count($evoChunks);
+            if ( $chunkNo != 0 ) $haveChunks = true;
+            $this->_importLog("Got $chunkNo chunks");
 
             /* if we have this element we need categories */
             $getCategories = true;
@@ -2288,19 +2351,27 @@ class Provisioner {
         /* Get all plugins if asked for */
         if ( $importArray['plugins'] ) {
 
+            $this->_importLogHeader("Getting plugins .........");
+
             $result = $this->_getAllEvoElements($evoPlugins, "plugin", $errorstring);
             if ( !$result ) return false;
 
              /* Set the 'have' flag */
-            if ( count($evoPlugins) != 0 ) $havePlugins = true;
+            $pluginNo = count($evoPlugins);
+            if ( $pluginNo != 0 ) $havePlugins = true;
+            $this->_importLog("Got $pluginNo plugins");
 
             /* If smart mode is on get the associated data */
             if ( $smartmode ) {
 
+                $this->_importLogHeader("Getting plugin events.........");
+
                 $result = $this->_getAllEvoPluginEvents($evoPluginEvent, $evoPluginEventMap,
                                                         $errorstring);
                 
-                if ( count($evoPluginEventMap) != 0 ) $havePluginEvent = true;
+                $pluginEventNo = count($evoPluginEventMap);
+                if ( $pluginEventNo != 0 ) $havePluginEvent = true;
+                $this->_importLog("Got $pluginEventNo plugin events");
 
             }
 
@@ -2308,22 +2379,28 @@ class Provisioner {
             $getCategories = true;
         }
 
+        /* Get all categories if we need them */
+        if ( $getCategories ) {
+
+            $this->_importLogHeader("Getting categories .........");
+
+            $result = $this->_getAllEvoElements($evoCategories, "category", $errorstring);
+            if ( !$result ) return false;
+
+            $categoryNo = count($evoCategories);
+            if ( $categoryNo != 0 ) $haveCategories = true;
+            $this->_importLog("Got $categoryNo categories");
+        }
+
         /*
          * Creation processing starts here
         */
 
-        /* Get all categories if we need them */
-        if ( $getCategories ) {
-
-            $result = $this->_getAllEvoElements($evoCategories, "category", $errorstring);
-            if ( !$result ) return false;
-            if ( count($evoCategories) != 0 ) $haveCategories = true;
-        }
-
-        /* Ok, now process the results */
 
         /* Firstly if we have categories we need them, so create them */
         if ( $haveCategories ) {
+
+            $this->_importLogHeader("Creating categories .........");
 
             /* Delete existing if requested */
             if ( $deletebefore ) {
@@ -2348,6 +2425,9 @@ class Provisioner {
                         return false;
                 }
 
+                $name = $category['category'];
+                $this->_importLog("Created category $name ");
+
                 /* Update the map */
                 $categoryMap[$category['id']] = $categoryObject->get('id');
             }
@@ -2355,6 +2435,8 @@ class Provisioner {
 
         /* Next, get the templates if needed and assign them the new categories */
         if ( $haveTemplates ) {
+
+             $this->_importLogHeader("Creating templates .........");
 
             /* Delete existing if requested */
             if ( $deletebefore ) {
@@ -2380,6 +2462,9 @@ class Provisioner {
                         return false;
                 }
 
+                $name = $template['templatename'];
+                $this->_importLog("Created template $name ");
+
                 /* Update the map */
                 $templateMap[$template['id']] = $templateObject->get('id');
 
@@ -2393,6 +2478,8 @@ class Provisioner {
          * document xref, metatags and document groups and their xref's.
          */
         if ( $haveResources ) {
+
+            $this->_importLogHeader("Creating resources .........");
 
             /* Delete existing if requested */
             if ( $deletebefore ) {
@@ -2409,6 +2496,14 @@ class Provisioner {
                 /* Set the context key */
                 $resource['context_key'] = $context;
                 
+                /* Change unix timestamps into date strings for xPDO */
+                $resource['pub_date'] = date("Y-m-d H:i:s" ,  $resource['pub_date']);
+                $resource['unpub_date'] = date("Y-m-d H:i:s" ,  $resource['unpub_date']);
+                $resource['createdon'] = date("Y-m-d H:i:s" ,  $resource['createdon']);
+                $resource['editedon'] = date("Y-m-d H:i:s" ,  $resource['editedon']);
+                $resource['deletedon'] = date("Y-m-d H:i:s" ,  $resource['deletedon']);
+                $resource['publishedon'] = date("Y-m-d H:i:s" ,  $resource['publishedon']);
+
                 /* Tag convert */
                 $translator->translate($resource['content']);
                 $translator->translate($resource['pagetitle']);
@@ -2423,6 +2518,9 @@ class Provisioner {
                         $errorstring .= $resource['pagetitle'];
                         return false;
                 }
+
+                $name = $resource['pagetitle'];
+                $this->_importLog("Created resource $name ");
 
                 /* Reset the newly created id to the original one, use
                  * exec to do this, not xPDO
@@ -2550,6 +2648,8 @@ class Provisioner {
        /* Next, get the TV's if needed and assign them the new categories */
         if ( $haveTvs ) {
 
+            $this->_importLogHeader("Creating TV's .........");
+
             /* Delete existing if requested */
             if ( $deletebefore ) {
 
@@ -2575,6 +2675,9 @@ class Provisioner {
                         $errorstring .= $tv['name'];
                         return false;
                 }
+
+                $name = $tv['name'];
+                $this->_importLog("Created TV $name ");
 
                 /* Update the map */
                 $tvMap[$tv['id']] = $tvObject->get('id');
@@ -2684,6 +2787,8 @@ class Provisioner {
         /* Next, get the snippets if needed and assign them the new categories */
         if ( $haveSnippets ) {
 
+            $this->_importLogHeader("Creating snippets .........");
+
             /* Delete existing if requested */
             if ( $deletebefore ) {
 
@@ -2697,6 +2802,8 @@ class Provisioner {
 
                  /* Create them */
                  $snippetObject = $this->modx->newObject('modSnippet');
+                 /* Remove any : characters */
+                 $snippet['name'] = str_replace(':', '-', $snippet['name']);
                  $snippetObject->fromArray($snippet);
                  if ($snippetObject->save() == false) {
 
@@ -2705,12 +2812,17 @@ class Provisioner {
                         return false;
                 }
 
+                $name = $snippet['name'];
+                $this->_importLog("Created snippet $name ");
+
              }
 
         } // Have snippets
 
          /* Next, get the chunks if needed and assign them the new categories */
         if ( $haveChunks ) {
+
+            $this->_importLogHeader("Creating chunks .........");
 
             /* Delete existing if requested */
             if ( $deletebefore ) {
@@ -2736,12 +2848,17 @@ class Provisioner {
                         return false;
                 }
 
+                $name = $chunk['name'];
+                $this->_importLog("Created chunk $name ");
+
              }
 
         } // Have chunks
 
         /* Next, get the plugins if needed and assign them the new categories */
         if ( $havePlugins ) {
+
+            $this->_importLogHeader("Creating plugins .........");
 
             /* Delete existing if requested */
             if ( $deletebefore ) {
@@ -2763,6 +2880,9 @@ class Provisioner {
                         $errorstring .= $plugin['name'];
                         return false;
                 }
+
+                $name = $plugin['name'];
+                $this->_importLog("Created plugin $name ");
 
                 /* Update the map */
                 $pluginMap[$plugin['id']] = $pluginObject->get('id');
@@ -2814,6 +2934,7 @@ class Provisioner {
         } // Have plugins
 
         /* Clear the cache */
+        $this->_importLogHeader("Clearing the site cache .........");
         $contexts = $this->modx->getCollection('modContext');
         foreach ($contexts as $context) {
             $paths[] = $context->get('key') . '/';
@@ -2826,6 +2947,7 @@ class Provisioner {
          $this->modx->cacheManager->clearCache($paths, $options);
 
          /* Done, exit */
+         $this->_closeImportLog();
          return true;
        
    }
@@ -3056,5 +3178,82 @@ class Provisioner {
         return true;
 
    }
+
+   /**
+     * Initialise evo site import logging
+     *
+     * @access private
+     *
+     */
+   function _initialiseImportLog() {
+
+       $datePart = date('d-m-y-Hi');
+       $outFile = $this->_tmppath . 'evoimport-' . $datePart . '.log';
+       $this->log = fopen($outFile,"w");
+       fwrite($this->log, PHP_EOL);
+       fwrite($this->log, "--------------------------------------");
+       fwrite($this->log, PHP_EOL);
+       fwrite($this->log, "Importing from $this->_connectorURL");
+       fwrite($this->log, PHP_EOL);
+       fwrite($this->log, "Import started at - " . $datePart);
+       fwrite($this->log, PHP_EOL);
+       fwrite($this->log, "--------------------------------------");
+       fwrite($this->log, PHP_EOL);
+
+   }
+
+   /**
+     * Log evo site import actions
+     *
+     * @access private
+     *
+     * @param $log log line text
+     */
+
+   function _importLog($log) {
+
+       $datePart = date('d-m-y-Hi');
+       fwrite($this->log, $datePart . ":  ". $log);
+       fwrite($this->log, PHP_EOL);
+
+   }
+
+   /**
+     * Log evo site import actions
+     *
+     * @access private
+     *
+     * @param $log log line text
+     */
+
+   function _importLogHeader($log) {
+
+       $datePart = date('d-m-y-Hi');
+       fwrite($this->log, PHP_EOL);
+       fwrite($this->log, $datePart . ":  >>>>". $log);
+       fwrite($this->log, PHP_EOL);
+       fwrite($this->log, PHP_EOL);
+
+   }
+   /**
+     * Terminate evo site import logging
+     *
+     * @access private
+     *
+     */
+   function _closeImportLog() {
+
+       $datePart = date('d-m-y-Hi');
+       fwrite($this->log, PHP_EOL);
+       fwrite($this->log, "--------------------------------------");
+       fwrite($this->log, PHP_EOL);
+       fwrite($this->log, "Import completed at - " . $datePart);
+       fwrite($this->log, PHP_EOL);
+       fwrite($this->log, "--------------------------------------");
+       fwrite($this->log, PHP_EOL);
+       fclose($this->log);
+
+   }
+
         
 }

@@ -12,6 +12,7 @@ PV.panel.Packages = function(config) {
         id: 'pv-panel-packages'
 		,title: _('menu_packages_tab')
         ,bodyStyle: ''
+        ,padding: 10
         ,defaults: { collapsible: false ,autoHeight: true }
         ,items: [{
             html: '<h2>'+_('packages')+'</h2>'

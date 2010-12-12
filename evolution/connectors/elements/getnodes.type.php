@@ -19,12 +19,7 @@ $elementType = ucfirst($g[1]);
 $type = $scriptProperties['type'];
 
 /* Get all the elements in this type */
-$db = mysql_connect($database_server, $database_user, $database_password);
-if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
-
-$dbase = str_replace('`', '', $dbase);
-$db_selected = mysql_select_db($dbase, $db);
-if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
+$db = connectToDb();
 
 $sql = "SELECT * FROM " . $table_prefix . $ar_tablemap[$type];
 
@@ -51,7 +46,7 @@ foreach ( $elements as $element ) {
 				
                 $class = 'icon-category folder';
                 $nodes[] = array(
-                    'text' => utf8_encode($category['category']) . ' (' . $category['id'] . ')',
+                    'text' => $category['category'] . ' (' . $category['id'] . ')',
                     'id' => 'n_'.$g[1].'_category_'.($category['id'] != null ? $category['id'] : 0),
                     'pk' => $category['id'],
                     'category' => $category['id'],
@@ -70,7 +65,7 @@ foreach ( $elements as $element ) {
 
             /* handle templatename case */
             $name = $type == 'template' ? $element['templatename'] : $element['name'];
-            $name = utf8_encode($name);
+            $name = $name;
             $class = 'icon-'.$g[1];
             $nodes[] = array(
                 'text' => strip_tags($name) . ' (' . $element['id'] . ')',
@@ -84,7 +79,7 @@ foreach ( $elements as $element ) {
                 'type' => $g[1],
                 'elementType' => $elementType,
                 'classKey' => $elementClassKey,
-                'qtip' => utf8_encode($element['description'])
+                'qtip' => $element['description']
             );
    }
 

@@ -46,3 +46,27 @@ function outputArray($output) {
 	return $response;
 }
 
+function connectToDb() {
+
+    global $database_server;
+    global $database_user;
+    global $database_password;
+    global $dbase;
+    global $database_connection_charset;
+    
+    /* Server */
+    $db = mysql_connect($database_server, $database_user, $database_password);
+    if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
+
+    /* Database */
+    $dbase = str_replace('`', '', $dbase);
+    $db_selected = mysql_select_db($dbase, $db);
+    if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
+
+    /* Set the character collation */
+    mysql_set_charset($database_connection_charset,$db);
+
+    return $db;
+
+
+}

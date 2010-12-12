@@ -21,12 +21,7 @@ $outputArray = array();
 if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
 /* Get the docgroups from the database */
-$db = mysql_connect($database_server, $database_user, $database_password);
-if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
-
-$dbase = str_replace('`', '', $dbase);
-$db_selected = mysql_select_db($dbase, $db);
-if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
+$db = connectToDb();
 
 /* Get the keywords */
 $sql = "SELECT a.id, name, private_memgroup, private_webgroup, document FROM " . $table_prefix . "documentgroup_names as a";
@@ -35,8 +30,6 @@ $result = mysql_query($sql, $db);
 if (!$result) die("Revo Gateway API error - Invalid Docgroup query");
 while ($docgroup = mysql_fetch_assoc($result)) {
 
-    /* UTF8 encode character fields */
-    $docgroup['name'] = utf8_encode($docgroup['name']);
     $docgroupArray[] = $docgroup;
 }
 

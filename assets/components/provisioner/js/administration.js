@@ -23,6 +23,7 @@ PV.panel.Administration = function(config) {
         ,labelWidth: 80
         ,layout : 'form'
         ,bodyStyle: 'padding: 15px 15px 15px 0;'
+        ,padding: 10
         ,header: false
         ,items: [{
             html: '<h2>'+_('menu_administration')+'</h2><br/>'

@@ -105,7 +105,7 @@ $_lang['admin_remember'] = 'Remember....';
 $_lang['nositeid_error'] = 'No Remote Site Identifier supplied';
 $_lang['menu_siteid'] = 'Remote Site Identifier';
 $_lang['nocurl'] = 'Oops! The PHP CURL package seems not to be present, please install it.';
-$_lang['norevogateway'] = 'Revolution gateway package is not installed in remote Evolution site';
+$_lang['norevogateway'] = 'Revolution gateway package is not installed in the remote Evolution site';
 $_lang['evoimport_context'] = 'Context';
 $_lang['evoimport_parentcategories'] = 'Parent Categories';
 $_lang['evoimport_templates'] = 'Templates';
@@ -159,3 +159,6 @@ $_lang['evoimportplugineventfail'] = 'Failed to create plugin event for plugin i
 $_lang['evoimportaborted'] = 'Import aborted by user';
 $_lang['evoimport_importingwarnbox'] = 'WARNING - your site will be overwritten';
 $_lang['evoimport_importingwarntext'] = 'Press yes followed by Import to continue';
+$_lang['evoimport_timeout'] = 'Import time period(secs)';
+$_lang['evoimport_timeout_help'] = 'Importation time period in seconds, the import must
+                                    complete before this time is reached or it will be halted';

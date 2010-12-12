@@ -12,6 +12,7 @@ PV.panel.Files = function(config) {
         id: 'pv-panel-files'
 		,title: _('menu_files_tab')
         ,bodyStyle: ''
+        ,padding: 10
         ,defaults: { collapsible: false ,autoHeight: true }
         ,width : 700
         ,items: [{

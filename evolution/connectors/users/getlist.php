@@ -25,12 +25,7 @@ $manager_users = array();
 $web_users = array();
 
 /* Get all the users */
-$db = mysql_connect($database_server, $database_user, $database_password);
-if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
-
-$dbase = str_replace('`', '', $dbase);
-$db_selected = mysql_select_db($dbase, $db);
-if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
+$db = connectToDb();
 
 if ( $username != '' ) {
 
@@ -74,7 +69,7 @@ foreach ( $manager_users as $manager_user ) {
     $result = mysql_query($sql, $db);
     while ($manageruser = mysql_fetch_assoc($result)) {
 
-        $manageruser['username'] = utf8_encode($manager_user['username']);
+        $manageruser['username'] = $manager_user['username'];
         $manageruser['id'] = $manager_user['id'];
         if ( $manageruser['blocked'] == 1 ) { 
 			$manageruser['true'];
@@ -94,7 +89,7 @@ foreach ( $web_users as $web_user ) {
     $result = mysql_query($sql, $db);
     while ($webuser = mysql_fetch_assoc($result)) {
 
-        $webuser['username'] = utf8_encode($web_user['username']);
+        $webuser['username'] = $web_user['username'];
         $webuser['id'] = $web_user['id'] . '_w';
         if ( $webuser['blocked'] == 1 ) { 
 			$webuser['true'];

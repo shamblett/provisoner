@@ -19,12 +19,7 @@ $metatagArray = array();
 if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
 /* Get the resources from the database */
-$db = mysql_connect($database_server, $database_user, $database_password);
-if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
-
-$dbase = str_replace('`', '', $dbase);
-$db_selected = mysql_select_db($dbase, $db);
-if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
+$db = connectToDb();
 
 $sql = "SELECT * FROM " . $table_prefix . "site_metatags ";
 
@@ -33,10 +28,6 @@ if (!$result) die("Revo Gateway API error - Invalid Resource query");
 
 while ($metatag = mysql_fetch_assoc($result)) {
 
-    /* UTF8 encode character fields */
-    $metatag['name'] = utf8_encode($metatag['name']);
-    $metatag['tag'] = utf8_encode($metatag['tag']);
-    $metatag['tagValue'] = utf8_encode($metatag['tagVlaue']);
     $metatagArray[] = $metatag;
 
 }

@@ -55,12 +55,7 @@ if ( $scriptProperties['id'] == 'root' && $node == 'root') {
 /* OK, must be a resource request */
 
 /* Get the resources from the database */
-$db = mysql_connect($database_server, $database_user, $database_password);
-if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
-
-$dbase = str_replace('`', '', $dbase);
-$db_selected = mysql_select_db($dbase, $db);
-if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
+$db = connectToDb();
 
 $sql = "SELECT id, pagetitle, longtitle, alias, description, parent, published,
           deleted, isfolder, menuindex, hidemenu FROM " . $table_prefix . "site_content "
@@ -95,13 +90,13 @@ while ($item = mysql_fetch_assoc($result)) {
     }
     $qtip = '';
     if ($item['longtitle'] != '') {
-            $qtip = utf8_encode('<b>'.$item['longtitle'].'</b><br />');
+            $qtip = '<b>'.$item['longtitle'].'</b><br />';
     }
     if ($item['description'] != '') {
-            $qtip = utf8_encode('<i>'.$item['description'].'</i>');
+            $qtip = '<i>'.$item['description'].'</i>';
     }
     $itemArray = array(
-            'text' => utf8_encode($item['pagetitle'].' ('.$item['id'] .')'),
+            'text' => $item['pagetitle'].' ('.$item['id'] .')',
             'id' => 'evolution'. '_' .$item['id'],
             'pk' => $item['id'],
             'cls' => $class,

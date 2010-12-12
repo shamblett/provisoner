@@ -21,12 +21,7 @@ $outputArray = array();
 if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
 /* Get the TV access data  from the database */
-$db = mysql_connect($database_server, $database_user, $database_password);
-if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
-
-$dbase = str_replace('`', '', $dbase);
-$db_selected = mysql_select_db($dbase, $db);
-if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
+$db = connectToDb();
 
 /* Get the plugin event data names */
 $sql = "SELECT id, name FROM " . $table_prefix . "system_eventnames";

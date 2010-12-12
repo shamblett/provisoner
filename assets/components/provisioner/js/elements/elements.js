@@ -12,6 +12,7 @@ PV.panel.Elements = function(config) {
         id: 'pv-panel-elements'
 		,title: _('menu_elements_tab')
         ,bodyStyle: ''
+        ,padding: 10
         ,defaults: { collapsible: false ,autoHeight: true }
         ,items: [{
             html: '<h2>'+_('pv_elements')+'</h2>'

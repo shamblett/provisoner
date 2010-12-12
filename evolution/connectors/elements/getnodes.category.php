@@ -17,12 +17,7 @@ if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 $nodes = array();
 
 /* Grab all the root categories */
-$db = mysql_connect($database_server, $database_user, $database_password);
-if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
-
-$dbase = str_replace('`', '', $dbase);
-$db_selected = mysql_select_db($dbase, $db);
-if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
+$db = connectToDb();
 
 $sql = "SELECT * FROM " . $table_prefix . 'categories';
 
@@ -32,7 +27,7 @@ while ($category = mysql_fetch_assoc($result)) {
 
     $class = 'icon-category folder';
     $nodes[] = array(
-        'text' => utf8_encode($category['category']) . ' (' . $category['id'] . ')',
+        'text' => $category['category'] . ' (' . $category['id'] . ')',
         'id' => 'n_category_'.$category['id'],
         'pk' => $category['id'],
         'data' => $category,

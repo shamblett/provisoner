@@ -23,6 +23,7 @@ PV.panel.EvoImport = function(config) {
         ,labelWidth: 160
         ,layout : 'form'
         ,bodyStyle: 'padding: 15px 15px 15px 0;'
+        ,padding: 10
         ,header: false
         ,items: [{
             html: '<h2>'+_('menu_evoimport')+'</h2><br/>'
@@ -51,6 +52,15 @@ PV.panel.EvoImport = function(config) {
                 ,id: 'pv-ct-import-cat'
                 ,inputValue: 1
                 ,checked: false
+
+            },{
+                xtype: 'textfield'
+                ,fieldLabel: _('evoimport_timeout')
+                ,description: _('evoimport_timeout_help')
+                ,name: 'pv-import-timeout'
+                ,id: 'pv-ct-import-timeout'
+                ,value: 300
+                ,boxMaxWidth: 40
             }]
 
         },{
@@ -134,12 +144,17 @@ Ext.extend(PV.panel.EvoImport,MODx.FormPanel,{
         this.fireEvent('ready');
     }
     ,
-    beforeSubmit: function(o) {
+    beforeSubmit: function(fm,o) {
         /* Change the default waiting message */
         o.config.saveMsg = _('evoimport_importing');
         Ext.apply(o.form.baseParams,{
             
             });
+
+        /* Set the import timeout*/
+        var timeoutCmp = Ext.getCmp('pv-ct-import-timeout');
+        var timeout = timeoutCmp.getValue();
+        this.form.timeout = timeout;
     }
     ,
     success: function() {

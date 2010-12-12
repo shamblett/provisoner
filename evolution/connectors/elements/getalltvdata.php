@@ -22,12 +22,7 @@ $outputArray = array();
 if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
 /* Get the TV access data  from the database */
-$db = mysql_connect($database_server, $database_user, $database_password);
-if (!$db) die("Revo Gateway API error - No server :- $database_server, $databse_user, $databse_password");
-
-$dbase = str_replace('`', '', $dbase);
-$db_selected = mysql_select_db($dbase, $db);
-if (!$db_selected) die ("Revo Gateway API error - No database :- $dbase");
+$db = connectToDb();
 
 /* Get the access data */
 $sql = "SELECT * FROM " . $table_prefix . "site_tmplvar_access";
@@ -55,8 +50,6 @@ $result = mysql_query($sql, $db);
 if (!$result) die("Revo Gateway API error - Invalid TV content value query");
 while ($tvcontent = mysql_fetch_assoc($result)) {
 
-    /* UTF8 encode */
-    $tvcontent['value'] = utf8_encode($tvcontent['value']);
     $contentArray[] = $tvcontent;
 }
 
