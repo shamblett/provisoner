@@ -144,7 +144,7 @@ Ext.extend(PV.panel.EvoImport,MODx.FormPanel,{
         this.fireEvent('ready');
     }
     ,
-    beforeSubmit: function(fm,o) {
+    beforeSubmit: function(o) {
         /* Change the default waiting message */
         o.config.saveMsg = _('evoimport_importing');
         Ext.apply(o.form.baseParams,{
