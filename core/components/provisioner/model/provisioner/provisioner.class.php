@@ -2165,7 +2165,7 @@ class Provisioner {
      * @param $errorstring reported error string
      *
      */
-   function importEvoSite($importArray, $context, $parent, $abort, &$errorstring) {
+   function importEvoSite($importArray, $context, $parent, $abort, $timeout, &$errorstring) {
 
         $result = false;
 
@@ -2216,6 +2216,9 @@ class Provisioner {
             return true;
         }
 
+        /* Set the time limit, or try to */
+        set_time_limit($timeout);
+        
         /* Set the base include flags */
         $smartmode = true;
         $deletebefore = true;
@@ -3215,8 +3218,8 @@ class Provisioner {
 
    function _importLog($log) {
 
-       $datePart = date('d-m-y-Hi');
-       fwrite($this->log, $datePart . ":  ". $log);
+       $datePart = date('H:i:s');
+       fwrite($this->log, $datePart . "  :  ". $log);
        fwrite($this->log, PHP_EOL);
 
    }
@@ -3231,9 +3234,9 @@ class Provisioner {
 
    function _importLogHeader($log) {
 
-       $datePart = date('d-m-y-Hi');
+       $datePart = date('H:i:s');
        fwrite($this->log, PHP_EOL);
-       fwrite($this->log, $datePart . ":  >>>>". $log);
+       fwrite($this->log, $datePart . "  :  >>>>". $log);
        fwrite($this->log, PHP_EOL);
        fwrite($this->log, PHP_EOL);
 

@@ -18,6 +18,7 @@ $parent = false;
 $importArray = array();
 $abort = true;
 $context='provisioner';
+$timeout = 0;
 
 /* Check for abort */
 if ( !isset($_POST['pv-import-abort'])) {
@@ -42,8 +43,18 @@ if ( isset($_POST['pv-import-chunks'])) $importArray['chunks'] = true;
 if ( isset($_POST['pv-import-plugins'])) $importArray['plugins'] = true;
 if ( isset($_POST['pv-import-parent-cat'])) $parent = true;
 
+/* Timeout, default to 2 mins */
+if ( isset($_POST['pv-ct-import-timeout'])) {
+
+    $timeout = $_POST['pv-ct-import-timeout'];
+
+} else {
+
+    $timeout = 120;
+}
+
 /* Pass the parameters to the Provisioner class method */
-$result = $pv->importEvoSite($importArray, $context, $parent, $abort, $errorstring);
+$result = $pv->importEvoSite($importArray, $context, $parent, $abort, $timeout, $errorstring);
 
 /* Check the result for error */
 if ($result !== true) {

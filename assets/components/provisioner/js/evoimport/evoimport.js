@@ -59,8 +59,8 @@ PV.panel.EvoImport = function(config) {
                 ,description: _('evoimport_timeout_help')
                 ,name: 'pv-import-timeout'
                 ,id: 'pv-ct-import-timeout'
-                ,value: 300
-                ,boxMaxWidth: 40
+                ,value: 120
+                ,boxMaxWidth: 20
             }]
 
         },{
