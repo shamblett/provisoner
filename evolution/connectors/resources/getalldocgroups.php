@@ -24,6 +24,7 @@ if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 $db = connectToDb();
 
 /* Get the keywords */
+logImportEvent("Getting all docgroups", $db);
 $sql = "SELECT a.id, name, private_memgroup, private_webgroup, document FROM " . $table_prefix . "documentgroup_names as a";
 $sql .= " LEFT JOIN " . $table_prefix . "document_groups on a.id = document_group";
 $result = mysql_query($sql, $db);
@@ -43,5 +44,6 @@ $outputArray[] = $docgroupArray;
 $outputArray[] = $outputMapArray;
 
 $response = errorSuccess('',$outputArray);
+logImportEvent("Got all docgroups", $db);
 mysql_close($db);
 echo toJSON($response);

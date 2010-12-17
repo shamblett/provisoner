@@ -25,6 +25,7 @@ switch ( $type ) {
     
     case 'snippet' :
         
+        logImportEvent("Getting all snippets", $db);
         $sql = "SELECT * FROM " . $table_prefix . "site_snippets";
         $result = mysql_query($sql, $db);
         
@@ -34,12 +35,14 @@ switch ( $type ) {
         }
 
         $response = errorSuccess('',$elementArray);
+        logImportEvent("Got all snippets", $db);
         mysql_close($db);
         echo toJSON($response);
         break;
 
     case 'chunk' :
 
+        logImportEvent("Getting all chunks", $db);
         $sql = "SELECT * FROM " . $table_prefix . "site_htmlsnippets";
         $result = mysql_query($sql, $db);
   
@@ -49,12 +52,14 @@ switch ( $type ) {
         }
 
         $response = errorSuccess('',$elementArray);
+        logImportEvent("Got all chunks", $db);
         mysql_close($db);
         echo toJSON($response);
         break;
 
     case 'template' :
 
+        logImportEvent("Getting all templates", $db);
         $sql = "SELECT * FROM " . $table_prefix . "site_templates";
         $result = mysql_query($sql, $db);
         
@@ -64,12 +69,14 @@ switch ( $type ) {
         }
 
         $response = errorSuccess('',$elementArray);
+        logImportEvent("Got all templates", $db);
         mysql_close($db);
         echo toJSON($response);
         break;
 
     case 'plugin' :
 
+        logImportEvent("Getting all plugins", $db);
         $sql = "SELECT * FROM " . $table_prefix . "site_plugins";
         $result = mysql_query($sql, $db);
         
@@ -79,13 +86,15 @@ switch ( $type ) {
         }
 
         $response = errorSuccess('',$elementArray);
+        logImportEvent("Got all plugins", $db);
         mysql_close($db);
         echo toJSON($response);
         break;
 
    case 'tv' :
 
-        $sql = "SELECT * FROM " . $table_prefix . "site_tmplvars";
+       logImportEvent("Getting all TVs", $db);
+       $sql = "SELECT * FROM " . $table_prefix . "site_tmplvars";
         $result = mysql_query($sql, $db);
 
         while ( $element = mysql_fetch_assoc($result) ) {
@@ -94,12 +103,14 @@ switch ( $type ) {
         }
 
         $response = errorSuccess('',$elementArray);
+        logImportEvent("Got all TVs", $db);
         mysql_close($db);
         echo toJSON($response);
         break;
 
   case 'category' :
 
+        logImportEvent("Getting all categories", $db);
         $sql = "SELECT * FROM " . $table_prefix . "categories";
         $result = mysql_query($sql, $db);
 
@@ -110,6 +121,7 @@ switch ( $type ) {
         }
 
         $response = errorSuccess('',$elementArray);
+        logImportEvent("Got all categories", $db);
         mysql_close($db);
         echo toJSON($response);
         break;

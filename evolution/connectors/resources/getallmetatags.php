@@ -20,7 +20,7 @@ if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 
 /* Get the resources from the database */
 $db = connectToDb();
-
+logImportEvent("Getting all metatags", $db);
 $sql = "SELECT * FROM " . $table_prefix . "site_metatags ";
 
 $result = mysql_query($sql, $db);
@@ -33,5 +33,6 @@ while ($metatag = mysql_fetch_assoc($result)) {
 }
 
 $response = errorSuccess('',$metatagArray);
+logImportEvent("Got all metatags", $db);
 mysql_close($db);
 echo toJSON($response);

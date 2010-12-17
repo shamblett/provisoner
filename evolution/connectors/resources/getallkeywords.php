@@ -23,6 +23,7 @@ if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 $db = connectToDb();
 
 /* Get the keywords */
+logImportEvent("Getting all keywords", $db);
 $sql = "SELECT keyword, content_id FROM " . $table_prefix . "site_keywords";
 $sql .= " LEFT JOIN " . $table_prefix . "keyword_xref on id = keyword_id";
 $result = mysql_query($sql, $db);
@@ -39,5 +40,6 @@ foreach ( $keywordArray as $keyword ) {
 }
 
 $response = errorSuccess('',$outputArray);
+logImportEvent("Got all keywords", $db);
 mysql_close($db);
 echo toJSON($response);

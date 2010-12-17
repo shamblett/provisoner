@@ -2993,6 +2993,7 @@ class Provisioner {
         if ( !$smartmode ) return true;
         
         /* Get the keywords and the Xref data */
+        $this->_importLogHeader("Getting keywords and xref .........");
         $url = $this->_connectorURL."/assets/snippets/revogateway/connectors/index.php?action=getall&entity=keywords";
         curl_setopt($this->_curlSession, CURLOPT_URL, $url);
         $result = curl_exec($this->_curlSession);
@@ -3011,6 +3012,7 @@ class Provisioner {
         $evoKeywords = $keywordArray['object'];
         
         /* Get the metatag data */
+        $this->_importLogHeader("Getting metatags .........");
         $url = $this->_connectorURL."/assets/snippets/revogateway/connectors/index.php?action=getall&entity=metatags";
         curl_setopt($this->_curlSession, CURLOPT_URL, $url);
         $result = curl_exec($this->_curlSession);
@@ -3029,6 +3031,7 @@ class Provisioner {
         $evoMetatags = $metatagArray['object'];
 
         /* Get the document groups and the assigned resources */
+        $this->_importLogHeader("Getting docgroups .........");
         $url = $this->_connectorURL."/assets/snippets/revogateway/connectors/index.php?action=getall&entity=docgroups";
         curl_setopt($this->_curlSession, CURLOPT_URL, $url);
         $result = curl_exec($this->_curlSession);

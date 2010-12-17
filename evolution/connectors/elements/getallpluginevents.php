@@ -24,6 +24,7 @@ if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 $db = connectToDb();
 
 /* Get the plugin event data names */
+logImportEvent("Getting all plugin events", $db);
 $sql = "SELECT id, name FROM " . $table_prefix . "system_eventnames";
 $result = mysql_query($sql, $db);
 if (!$result) die("Revo Gateway API error - Invalid TV access query");
@@ -49,5 +50,6 @@ $outputArray[0] = $eventNameArray;
 $outputArray[1] = $eventMapArray;
 
 $response = errorSuccess('',$outputArray);
+logImportEvent("Got all plugin events", $db);
 mysql_close($db);
 echo toJSON($response);

@@ -21,6 +21,8 @@ if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 /* Get the resources from the database */
 $db = connectToDb();
 
+logImportEvent("Getting all resources", $db);
+
 $sql = "SELECT * FROM " . $table_prefix . "site_content ";
 
 $result = mysql_query($sql, $db);
@@ -42,5 +44,6 @@ while ($resource = mysql_fetch_assoc($result)) {
 }
 
 $response = errorSuccess('',$resourceArray);
+logImportEvent("Got all resources", $db);
 mysql_close($db);
 echo toJSON($response);

@@ -163,7 +163,10 @@ Ext.extend(PV.panel.EvoImport,MODx.FormPanel,{
         if ( abortBox.getValue() == 0 ) {
             /* Succesful import, flip the abort back on */
             abortBox.setValue(true);
-            MODx.msg.alert(_('evoimportsuccess'));
+            Ext.Msg.show({
+                msg: _('evoimportsuccess'),
+                buttons: Ext.Msg.OK
+            });
         } else {
             /* Confirm the import */
             Ext.Msg.confirm( _('evoimport_importingwarnbox'), _('evoimport_importingwarntext'),

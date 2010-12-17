@@ -70,3 +70,17 @@ function connectToDb() {
 
 
 }
+
+function logImportEvent($msg, &$db) {
+
+        global $table_prefix;
+        
+        $evtid = 0;
+        $type = 1;
+        $source = 'RevoGateway';
+        $LoginUserID = 0;
+        $sql= "INSERT INTO " . $table_prefix . "event_log" . " (eventid,type,createdon,source,description,user) " .
+	          "VALUES($evtid,$type," . time() . ",'$source','$msg','" . $LoginUserID . "')";
+        mysql_query($sql, $db);
+    }
+

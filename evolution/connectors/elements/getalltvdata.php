@@ -25,6 +25,7 @@ if(REVO_GATEWAY_OPEN != "true") die("Revo Gateway API error - Invalid access");
 $db = connectToDb();
 
 /* Get the access data */
+logImportEvent("Getting all tv data", $db);
 $sql = "SELECT * FROM " . $table_prefix . "site_tmplvar_access";
 $result = mysql_query($sql, $db);
 if (!$result) die("Revo Gateway API error - Invalid TV access query");
@@ -59,5 +60,6 @@ $outputArray[1] = $templateArray;
 $outputArray[2] = $contentArray;
 
 $response = errorSuccess('',$outputArray);
+logImportEvent("Got all tv data", $db);
 mysql_close($db);
 echo toJSON($response);
