@@ -27,8 +27,8 @@ echo '<pre>'; $modx->setLogTarget('ECHO');
 error_reporting(E_ALL); ini_set('display_errors', true);
 
 $name = 'provisioner';
-$version = '1.9';
-$release = 'beta';
+$version = '1.0.0';
+$release = 'pl';
 
 $modx->loadClass('transport.modPackageBuilder', '', false, true);
 $builder = new modPackageBuilder($modx);
@@ -133,8 +133,6 @@ foreach ( $vehicles as $vehicle ) {
 	$builder->putVehicle($vehicle);
 }
 
-/* Lexicon */
-$builder->buildLexicon($sources['lexicon']); 
 
 /* Pack in the license file, readme and setup options */
 $builder->setPackageAttributes(array(

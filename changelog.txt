@@ -1,4 +1,9 @@
 
+Changes incorporated into 1.10-beta
+----------------------------------
+
+Fixes for issues 41, 44, 45 and 46
+
 Changes incorporated into 1.9-beta
 ----------------------------------
 

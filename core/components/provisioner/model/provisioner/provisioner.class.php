@@ -228,6 +228,7 @@ class Provisioner {
 
         $status = false;
         $error = 'none';
+        $errorText = "";
 
         /* Check for CURL, if not present no point going any further */
         if ( !function_exists('curl_init') ) {
@@ -259,9 +260,10 @@ class Provisioner {
         /* If the remote site is evolution check for the gateway code first */
         if ( $remoteSiteTypeIsEvo ) {
 
-            if ( !$this->_evolutionGatewayExists() ) {
+            if ( !$this->_evolutionGatewayExists($errorText) ) {
 
                     $error = $this->modx->lexicon('norevogateway');
+                    $error .= " - " . $errorText;
                     return $status;
             }
 
@@ -2117,20 +2119,25 @@ class Provisioner {
      * @return true indicates the gateway is in place
      *
      */
-    function _evolutionGatewayExists() {
+    function _evolutionGatewayExists(&$errorText) {
 
         $url = $this->_connectorURL."/assets/snippets/revogateway/index.php";
         curl_setopt($this->_curlSession, CURLOPT_URL, $url);
         $result = curl_exec($this->_curlSession);
 
         /* Result length is constant, check for it */
-        if ( strlen($result) != Provisioner::GATEWAY_INSTALLED ) return false;
+        if ( strlen($result) != Provisioner::GATEWAY_INSTALLED ) {
+			
+			$errorText = print_r($result, true);
+			return false;
+		}
         
         $resultarray = $this->modx->fromJSON($result);
         
         /* Check for success */
         if ( $resultarray['success'] == 1 ) return true;
-
+     
+        $errorText = print_r($result, true);
         return false;
 
    }
@@ -2251,8 +2258,15 @@ class Provisioner {
             $docGroupsNo = count($evoDocgroups);
 
             if ( $resourceNo != 0 ) $haveResources = true;
-            if ( $keywordsNo != 0 ) $haveKeywords = true;
-            if ( $metatagsNo != 0 ) $haveMetatags = true;
+            
+            /* No keywords or metatags in 2.1 */
+            $this->modx->getVersionData();
+            if (version_compare($this->modx->version['full_version'], '2.0.8-pl', '<=')) {
+            
+				if ( $keywordsNo != 0 ) $haveKeywords = true;
+				if ( $metatagsNo != 0 ) $haveMetatags = true;
+			}
+			
             if ( $docGroupsNo != 0 ) $haveDocgroups = true;
 
             $this->_importLog("Got $resourceNo resources");
@@ -2742,6 +2756,8 @@ class Provisioner {
                     if ( $tvContent['contentid'] == null ) continue;
                     $tvContent['tmplvarid'] = $tvMap[$tvContent['tmplvarid']];
                     if ( $tvContent['tmplvarid'] == null ) continue;
+                    /* Tag convert */
+                    $translator->translate($tvContent['value']);
                     $tvContentObject->fromArray($tvContent, '' , true);
                     if ($tvContentObject->save() == false) {
 
