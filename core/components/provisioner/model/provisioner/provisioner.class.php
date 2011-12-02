@@ -1178,6 +1178,9 @@ class Provisioner {
         $user->set('username', $userdata['username']);
         $user->set('password', $userdata['password']);
         $user->set('cachepwd', "");
+        if ( $this->_remoteIsEvo ) {
+            $user->set('hash_class', 'hashing.modMD5');
+        }
         if ($user->save() == false) {
 
             $errorstring = $this->modx->lexicon('failedtocreatelocaluser');
