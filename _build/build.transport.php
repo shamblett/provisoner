@@ -27,7 +27,7 @@ echo '<pre>'; $modx->setLogTarget('ECHO');
 error_reporting(E_ALL); ini_set('display_errors', true);
 
 $name = 'provisioner';
-$version = '1.0.0';
+$version = '1.1.0';
 $release = 'pl';
 
 $modx->loadClass('transport.modPackageBuilder', '', false, true);

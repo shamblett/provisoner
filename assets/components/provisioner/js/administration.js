@@ -168,6 +168,7 @@ Ext.extend(PV.panel.Administration,MODx.FormPanel,{
                     }
                 });
         this.fireEvent('ready');
+        return false;
     }
     ,
     beforeSubmit: function(o) {
