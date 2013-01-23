@@ -18,12 +18,12 @@ require_once dirname(dirname(__FILE__)).'/index.php';
 $limit = 20;
 $start = 0;
 
-if ($_REQUEST['limit'] != '') {
+if (@$_REQUEST['limit'] != '') {
 	
 	$limit = $_REQUEST['limit'];
 }
 
-if ($_REQUEST['start'] != '') {
+if (@$_REQUEST['start'] != '') {
 	
 	$start = $_REQUEST['start'];
 }

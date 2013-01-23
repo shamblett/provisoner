@@ -20,12 +20,12 @@ $realpath = 'none';
 $prependpath = '';
 
 
-if ($_REQUEST['file'] != '') {
+if (@$_REQUEST['file'] != '') {
 	
 	$file = $_REQUEST['file'];
 }
 
-if ($_REQUEST['folder'] != '') {
+if (@$_REQUEST['folder'] != '') {
 	
 	if ($_REQUEST['folder'] == 'true' ) { 
 	
@@ -34,13 +34,13 @@ if ($_REQUEST['folder'] != '') {
 	}
 }
 
-if ($_REQUEST['realpath'] != '') {
+if (@$_REQUEST['realpath'] != '') {
 	
 	$realpath = $_REQUEST['realpath'];
 		
 }
 
-if ($_REQUEST['prependpath'] != '') {
+if (@$_REQUEST['prependpath'] != '') {
 	
 	$prependpath = $_REQUEST['prependpath'];
 		
