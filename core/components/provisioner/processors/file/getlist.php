@@ -15,7 +15,7 @@ require_once dirname(dirname(__FILE__)).'/index.php';
 
 /* Check the incoming parameters */
 
-if ($_REQUEST['node'] != '') {
+if (@$_REQUEST['node'] != '') {
 	
 	$filenode = $_REQUEST['node'];
 }

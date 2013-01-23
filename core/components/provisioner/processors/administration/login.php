@@ -14,26 +14,26 @@
 require_once dirname(dirname(__FILE__)).'/index.php';
 
 /* Check the parameters are present */
-if ($_REQUEST['account'] == '') {
+if (@$_REQUEST['account'] == '') {
 	return $modx->error->failure($modx->lexicon('noaccount_error'));
 }
 
-if ($_REQUEST['password'] == '') {
+if (@$_REQUEST['password'] == '') {
 	return $modx->error->failure($modx->lexicon('nopassword_error'));
 }
 
-if ($_REQUEST['url'] == '') {
+if (@$_REQUEST['url'] == '') {
 	return $modx->error->failure($modx->lexicon('nourl_error'));
 }
 
 $siteIsEvo = false;
-if ( $_REQUEST['site'] == 'evolution') {
+if ( @$_REQUEST['site'] == 'evolution') {
         $siteIsEvo = true;
 }
 
 $siteId = '';
 if ( !$siteIsEvo ) {
-    if ($_REQUEST['siteid'] == '') {
+    if (@$_REQUEST['siteid'] == '') {
 	return $modx->error->failure($modx->lexicon('nositeid_error'));
     } else {
         $siteId = $_REQUEST['siteid'];

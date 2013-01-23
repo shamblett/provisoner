@@ -18,12 +18,12 @@ $id = -1;
 $folder = false;
 $convert = false;
 
-if ($_REQUEST['id'] != '') {
+if (@$_REQUEST['id'] != '') {
 	
 	$id = $_REQUEST['id'];
 }
 
-if ($_REQUEST['folder'] != '') {
+if (@$_REQUEST['folder'] != '') {
 	
 	if ( $_REQUEST['folder'] == 'true' ) {
 		
@@ -32,7 +32,7 @@ if ($_REQUEST['folder'] != '') {
 		
 }
 
-if ($_REQUEST['convert'] != '') {
+if (@$_REQUEST['convert'] != '') {
 
 	if ( $_REQUEST['convert'] == 'true' ) {
 
