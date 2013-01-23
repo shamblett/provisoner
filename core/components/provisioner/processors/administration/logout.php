@@ -14,7 +14,7 @@
 require_once dirname(dirname(__FILE__)).'/index.php';
 
 /* Check the parameters are present */
-if ($_REQUEST['account'] == '') {
+if (@$_REQUEST['account'] == '') {
 	return $modx->error->failure($modx->lexicon('noaccount_error'));
 }
 
@@ -23,7 +23,7 @@ $account = $_REQUEST['account'];
 $errorstring = "";
 
 $siteIsEvo = false;
-if ( $_REQUEST['site'] == 'evolution') {
+if ( @$_REQUEST['site'] == 'evolution') {
         $siteIsEvo = true;
 }
 

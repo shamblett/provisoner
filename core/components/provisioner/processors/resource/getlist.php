@@ -18,17 +18,17 @@ require_once dirname(dirname(__FILE__)).'/index.php';
 $id = "";
 $type = "";
 
-if ($_REQUEST['id'] != '') {
+if (@$_REQUEST['id'] != '') {
 	
 	$id = $_REQUEST['id'];
 }
 
-if ($_REQUEST['node'] != '') {
+if (@$_REQUEST['node'] != '') {
 	
 	$id = $_REQUEST['node'];
 }
 
-if ($_REQUEST['type'] != '') {
+if (@$_REQUEST['type'] != '') {
 	
 	$type = $_REQUEST['type'];
 }

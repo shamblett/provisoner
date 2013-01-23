@@ -17,12 +17,12 @@ require_once dirname(dirname(__FILE__)).'/index.php';
 $id = -1;
 $convert = false;
 
-if ($_REQUEST['id'] != '') {
+if (@$_REQUEST['id'] != '') {
 	
 	$id = $_REQUEST['id'];
 }
 
-if ($_REQUEST['convert'] != '') {
+if (@$_REQUEST['convert'] != '') {
 
 	if ( $_REQUEST['convert'] == 'true' ) $convert = true;
 }

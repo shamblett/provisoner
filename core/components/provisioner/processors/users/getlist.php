@@ -19,17 +19,17 @@ $limit = 20;
 $start = 0;
 $username = 'none';
 
-if ($_REQUEST['limit'] != '') {
+if (@$_REQUEST['limit'] != '') {
 	
 	$limit = $_REQUEST['limit'];
 }
 
-if ($_REQUEST['start'] != '') {
+if (@$_REQUEST['start'] != '') {
 	
 	$start = $_REQUEST['start'];
 }
 
-if ($_REQUEST['username'] != '') {
+if (@$_REQUEST['username'] != '') {
 	
 	$username = $_REQUEST['username'];
 }
