@@ -234,14 +234,14 @@ class Provisioner {
         if ( !function_exists('curl_init') ) {
 		
             $error = $this->modx->lexicon('nocurl');
-            return $status;
+            return false;
 	}
 		
          /* Check for logged in user same as this one */
         if ( $this->_checkLoggedIn() ) {
 
             $error = $this->modx->lexicon('wronguser');
-            return $status;
+            return false;
 	}
 
         $this->_connectorURL = $url;
@@ -261,10 +261,8 @@ class Provisioner {
         if ( $remoteSiteTypeIsEvo ) {
 
             if ( !$this->_evolutionGatewayExists($errorText) ) {
-
                     $error = $this->modx->lexicon('norevogateway');
-                    $error .= " - " . $errorText;
-                    return $status;
+                    return false;
             }
 
          }
@@ -2130,8 +2128,10 @@ class Provisioner {
 
         /* Result length is constant, check for it */
         if ( strlen($result) != Provisioner::GATEWAY_INSTALLED ) {
-			
-			$errorText = print_r($result, true);
+			// Log the response to the MODX log, otherwise it gets too impossibly long to read
+			$this->modx->log(xPDO::LOG_LEVEL_ERROR, 
+				'[Provisioner] '.$this->modx->lexicon('norevogateway')
+				. print_r($result, true));
 			return false;
 		}
         
